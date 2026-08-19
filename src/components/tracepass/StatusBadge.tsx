@@ -70,7 +70,13 @@ const readinessIcon: Record<ReadinessKey, LucideIcon> = {
   critical: OctagonAlert,
 };
 
-export function ReadinessBadge({ status, className }: { status: ReadinessKey; className?: string }) {
+export function ReadinessBadge({
+  status,
+  className,
+}: {
+  status: ReadinessKey;
+  className?: string | undefined;
+}) {
   return (
     <Pill tone={readinessTone[status]} icon={readinessIcon[status]} className={className}>
       {readinessLabel[status]}
