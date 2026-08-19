@@ -10,33 +10,167 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CaiDatRouteImport } from './routes/cai-dat'
+import { Route as HoSoRouteImport } from './routes/ho-so'
+import { Route as MucDoSanSangRouteImport } from './routes/muc-do-san-sang'
+import { Route as TheoDoiRouteImport } from './routes/theo-doi'
+import { Route as TongQuanRouteImport } from './routes/tong-quan'
+import { Route as DppIndexRouteImport } from './routes/dpp.index'
+import { Route as DppQrRouteImport } from './routes/dpp.qr'
+import { Route as SanPhamIndexRouteImport } from './routes/san-pham.index'
+import { Route as SanPhamIdRouteImport } from './routes/san-pham.$id'
+import { Route as SanPhamMoiRouteImport } from './routes/san-pham.moi'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CaiDatRoute = CaiDatRouteImport.update({
+  id: '/cai-dat',
+  path: '/cai-dat',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HoSoRoute = HoSoRouteImport.update({
+  id: '/ho-so',
+  path: '/ho-so',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MucDoSanSangRoute = MucDoSanSangRouteImport.update({
+  id: '/muc-do-san-sang',
+  path: '/muc-do-san-sang',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TheoDoiRoute = TheoDoiRouteImport.update({
+  id: '/theo-doi',
+  path: '/theo-doi',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TongQuanRoute = TongQuanRouteImport.update({
+  id: '/tong-quan',
+  path: '/tong-quan',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DppIndexRoute = DppIndexRouteImport.update({
+  id: '/dpp/',
+  path: '/dpp/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DppQrRoute = DppQrRouteImport.update({
+  id: '/dpp/qr',
+  path: '/dpp/qr',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SanPhamIndexRoute = SanPhamIndexRouteImport.update({
+  id: '/san-pham/',
+  path: '/san-pham/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SanPhamIdRoute = SanPhamIdRouteImport.update({
+  id: '/san-pham/$id',
+  path: '/san-pham/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SanPhamMoiRoute = SanPhamMoiRouteImport.update({
+  id: '/san-pham/moi',
+  path: '/san-pham/moi',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/cai-dat': typeof CaiDatRoute
+  '/ho-so': typeof HoSoRoute
+  '/muc-do-san-sang': typeof MucDoSanSangRoute
+  '/theo-doi': typeof TheoDoiRoute
+  '/tong-quan': typeof TongQuanRoute
+  '/dpp/qr': typeof DppQrRoute
+  '/san-pham/$id': typeof SanPhamIdRoute
+  '/san-pham/moi': typeof SanPhamMoiRoute
+  '/dpp/': typeof DppIndexRoute
+  '/san-pham/': typeof SanPhamIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/cai-dat': typeof CaiDatRoute
+  '/ho-so': typeof HoSoRoute
+  '/muc-do-san-sang': typeof MucDoSanSangRoute
+  '/theo-doi': typeof TheoDoiRoute
+  '/tong-quan': typeof TongQuanRoute
+  '/dpp/qr': typeof DppQrRoute
+  '/san-pham/$id': typeof SanPhamIdRoute
+  '/san-pham/moi': typeof SanPhamMoiRoute
+  '/dpp': typeof DppIndexRoute
+  '/san-pham': typeof SanPhamIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/cai-dat': typeof CaiDatRoute
+  '/ho-so': typeof HoSoRoute
+  '/muc-do-san-sang': typeof MucDoSanSangRoute
+  '/theo-doi': typeof TheoDoiRoute
+  '/tong-quan': typeof TongQuanRoute
+  '/dpp/qr': typeof DppQrRoute
+  '/san-pham/$id': typeof SanPhamIdRoute
+  '/san-pham/moi': typeof SanPhamMoiRoute
+  '/dpp/': typeof DppIndexRoute
+  '/san-pham/': typeof SanPhamIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/cai-dat'
+    | '/ho-so'
+    | '/muc-do-san-sang'
+    | '/theo-doi'
+    | '/tong-quan'
+    | '/dpp/qr'
+    | '/san-pham/$id'
+    | '/san-pham/moi'
+    | '/dpp/'
+    | '/san-pham/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/cai-dat'
+    | '/ho-so'
+    | '/muc-do-san-sang'
+    | '/theo-doi'
+    | '/tong-quan'
+    | '/dpp/qr'
+    | '/san-pham/$id'
+    | '/san-pham/moi'
+    | '/dpp'
+    | '/san-pham'
+  id:
+    | '__root__'
+    | '/'
+    | '/cai-dat'
+    | '/ho-so'
+    | '/muc-do-san-sang'
+    | '/theo-doi'
+    | '/tong-quan'
+    | '/dpp/qr'
+    | '/san-pham/$id'
+    | '/san-pham/moi'
+    | '/dpp/'
+    | '/san-pham/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CaiDatRoute: typeof CaiDatRoute
+  HoSoRoute: typeof HoSoRoute
+  MucDoSanSangRoute: typeof MucDoSanSangRoute
+  TheoDoiRoute: typeof TheoDoiRoute
+  TongQuanRoute: typeof TongQuanRoute
+  DppQrRoute: typeof DppQrRoute
+  SanPhamIdRoute: typeof SanPhamIdRoute
+  SanPhamMoiRoute: typeof SanPhamMoiRoute
+  DppIndexRoute: typeof DppIndexRoute
+  SanPhamIndexRoute: typeof SanPhamIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +182,91 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/cai-dat': {
+      id: '/cai-dat'
+      path: '/cai-dat'
+      fullPath: '/cai-dat'
+      preLoaderRoute: typeof CaiDatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ho-so': {
+      id: '/ho-so'
+      path: '/ho-so'
+      fullPath: '/ho-so'
+      preLoaderRoute: typeof HoSoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/muc-do-san-sang': {
+      id: '/muc-do-san-sang'
+      path: '/muc-do-san-sang'
+      fullPath: '/muc-do-san-sang'
+      preLoaderRoute: typeof MucDoSanSangRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/theo-doi': {
+      id: '/theo-doi'
+      path: '/theo-doi'
+      fullPath: '/theo-doi'
+      preLoaderRoute: typeof TheoDoiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tong-quan': {
+      id: '/tong-quan'
+      path: '/tong-quan'
+      fullPath: '/tong-quan'
+      preLoaderRoute: typeof TongQuanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dpp/': {
+      id: '/dpp/'
+      path: '/dpp'
+      fullPath: '/dpp/'
+      preLoaderRoute: typeof DppIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dpp/qr': {
+      id: '/dpp/qr'
+      path: '/dpp/qr'
+      fullPath: '/dpp/qr'
+      preLoaderRoute: typeof DppQrRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/san-pham/': {
+      id: '/san-pham/'
+      path: '/san-pham'
+      fullPath: '/san-pham/'
+      preLoaderRoute: typeof SanPhamIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/san-pham/$id': {
+      id: '/san-pham/$id'
+      path: '/san-pham/$id'
+      fullPath: '/san-pham/$id'
+      preLoaderRoute: typeof SanPhamIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/san-pham/moi': {
+      id: '/san-pham/moi'
+      path: '/san-pham/moi'
+      fullPath: '/san-pham/moi'
+      preLoaderRoute: typeof SanPhamMoiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CaiDatRoute: CaiDatRoute,
+  HoSoRoute: HoSoRoute,
+  MucDoSanSangRoute: MucDoSanSangRoute,
+  TheoDoiRoute: TheoDoiRoute,
+  TongQuanRoute: TongQuanRoute,
+  DppQrRoute: DppQrRoute,
+  SanPhamIdRoute: SanPhamIdRoute,
+  SanPhamMoiRoute: SanPhamMoiRoute,
+  DppIndexRoute: DppIndexRoute,
+  SanPhamIndexRoute: SanPhamIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
