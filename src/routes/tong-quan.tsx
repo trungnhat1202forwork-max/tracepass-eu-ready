@@ -90,6 +90,7 @@ function Dashboard() {
                     <Link
                       to="/san-pham/$id"
                       params={{ id: p.id }}
+                      search={{ buoc: "thiet-lap" as const }}
                       className="flex items-center gap-3"
                     >
                       <img

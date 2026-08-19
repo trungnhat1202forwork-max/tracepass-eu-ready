@@ -10,13 +10,20 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TheoDoiRouteImport } from './routes/theo-doi'
 import { Route as TongQuanRouteImport } from './routes/tong-quan'
 import { Route as SanPhamIndexRouteImport } from './routes/san-pham.index'
+import { Route as SanPhamIdRouteImport } from './routes/san-pham.$id'
 import { Route as SanPhamMoiRouteImport } from './routes/san-pham.moi'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TheoDoiRoute = TheoDoiRouteImport.update({
+  id: '/theo-doi',
+  path: '/theo-doi',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TongQuanRoute = TongQuanRouteImport.update({
@@ -29,6 +36,11 @@ const SanPhamIndexRoute = SanPhamIndexRouteImport.update({
   path: '/san-pham/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SanPhamIdRoute = SanPhamIdRouteImport.update({
+  id: '/san-pham/$id',
+  path: '/san-pham/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SanPhamMoiRoute = SanPhamMoiRouteImport.update({
   id: '/san-pham/moi',
   path: '/san-pham/moi',
@@ -37,34 +49,61 @@ const SanPhamMoiRoute = SanPhamMoiRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/theo-doi': typeof TheoDoiRoute
   '/tong-quan': typeof TongQuanRoute
+  '/san-pham/$id': typeof SanPhamIdRoute
   '/san-pham/moi': typeof SanPhamMoiRoute
   '/san-pham/': typeof SanPhamIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/theo-doi': typeof TheoDoiRoute
   '/tong-quan': typeof TongQuanRoute
+  '/san-pham/$id': typeof SanPhamIdRoute
   '/san-pham/moi': typeof SanPhamMoiRoute
   '/san-pham': typeof SanPhamIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/theo-doi': typeof TheoDoiRoute
   '/tong-quan': typeof TongQuanRoute
+  '/san-pham/$id': typeof SanPhamIdRoute
   '/san-pham/moi': typeof SanPhamMoiRoute
   '/san-pham/': typeof SanPhamIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/tong-quan' | '/san-pham/moi' | '/san-pham/'
+  fullPaths:
+    | '/'
+    | '/theo-doi'
+    | '/tong-quan'
+    | '/san-pham/$id'
+    | '/san-pham/moi'
+    | '/san-pham/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/tong-quan' | '/san-pham/moi' | '/san-pham'
-  id: '__root__' | '/' | '/tong-quan' | '/san-pham/moi' | '/san-pham/'
+  to:
+    | '/'
+    | '/theo-doi'
+    | '/tong-quan'
+    | '/san-pham/$id'
+    | '/san-pham/moi'
+    | '/san-pham'
+  id:
+    | '__root__'
+    | '/'
+    | '/theo-doi'
+    | '/tong-quan'
+    | '/san-pham/$id'
+    | '/san-pham/moi'
+    | '/san-pham/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  TheoDoiRoute: typeof TheoDoiRoute
   TongQuanRoute: typeof TongQuanRoute
+  SanPhamIdRoute: typeof SanPhamIdRoute
   SanPhamMoiRoute: typeof SanPhamMoiRoute
   SanPhamIndexRoute: typeof SanPhamIndexRoute
 }
@@ -76,6 +115,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/theo-doi': {
+      id: '/theo-doi'
+      path: '/theo-doi'
+      fullPath: '/theo-doi'
+      preLoaderRoute: typeof TheoDoiRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tong-quan': {
@@ -92,6 +138,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SanPhamIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/san-pham/$id': {
+      id: '/san-pham/$id'
+      path: '/san-pham/$id'
+      fullPath: '/san-pham/$id'
+      preLoaderRoute: typeof SanPhamIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/san-pham/moi': {
       id: '/san-pham/moi'
       path: '/san-pham/moi'
@@ -104,7 +157,9 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  TheoDoiRoute: TheoDoiRoute,
   TongQuanRoute: TongQuanRoute,
+  SanPhamIdRoute: SanPhamIdRoute,
   SanPhamMoiRoute: SanPhamMoiRoute,
   SanPhamIndexRoute: SanPhamIndexRoute,
 }

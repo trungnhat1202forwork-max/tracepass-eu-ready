@@ -44,6 +44,7 @@ function ProductList() {
             key={p.id}
             to="/san-pham/$id"
             params={{ id: p.id }}
+            search={{ buoc: "thiet-lap" as const }}
             className="surface-card overflow-hidden transition-shadow hover:shadow-[var(--shadow-raised)]"
           >
             <img
