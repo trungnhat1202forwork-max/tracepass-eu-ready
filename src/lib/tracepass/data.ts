@@ -426,4 +426,4 @@ export const categories = [
   "Đồ thể thao",
 ];
 
-export const mainProduct = products[0];
+export const mainProduct: Product = products[0] as Product;
