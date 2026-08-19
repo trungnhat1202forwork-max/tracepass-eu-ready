@@ -41,7 +41,7 @@ function Pill({
   tone: Tone;
   icon: LucideIcon;
   children: React.ReactNode;
-  className?: string;
+  className?: string | undefined;
 }) {
   return (
     <span
