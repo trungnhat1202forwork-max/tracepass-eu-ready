@@ -21,7 +21,7 @@ export const Route = createFileRoute("/muc-do-san-sang")({
       },
     ],
   }),
-  component: Readiness;
+  component: Readiness,
 });
 
 function Readiness() {
