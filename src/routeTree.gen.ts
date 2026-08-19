@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CaiDatRouteImport } from './routes/cai-dat'
 import { Route as HoSoRouteImport } from './routes/ho-so'
 import { Route as MucDoSanSangRouteImport } from './routes/muc-do-san-sang'
 import { Route as TheoDoiRouteImport } from './routes/theo-doi'
@@ -21,6 +22,11 @@ import { Route as SanPhamMoiRouteImport } from './routes/san-pham.moi'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CaiDatRoute = CaiDatRouteImport.update({
+  id: '/cai-dat',
+  path: '/cai-dat',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HoSoRoute = HoSoRouteImport.update({
@@ -61,6 +67,7 @@ const SanPhamMoiRoute = SanPhamMoiRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/cai-dat': typeof CaiDatRoute
   '/ho-so': typeof HoSoRoute
   '/muc-do-san-sang': typeof MucDoSanSangRoute
   '/theo-doi': typeof TheoDoiRoute
@@ -71,6 +78,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/cai-dat': typeof CaiDatRoute
   '/ho-so': typeof HoSoRoute
   '/muc-do-san-sang': typeof MucDoSanSangRoute
   '/theo-doi': typeof TheoDoiRoute
@@ -82,6 +90,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/cai-dat': typeof CaiDatRoute
   '/ho-so': typeof HoSoRoute
   '/muc-do-san-sang': typeof MucDoSanSangRoute
   '/theo-doi': typeof TheoDoiRoute
@@ -94,6 +103,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/cai-dat'
     | '/ho-so'
     | '/muc-do-san-sang'
     | '/theo-doi'
@@ -104,6 +114,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/cai-dat'
     | '/ho-so'
     | '/muc-do-san-sang'
     | '/theo-doi'
@@ -114,6 +125,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/cai-dat'
     | '/ho-so'
     | '/muc-do-san-sang'
     | '/theo-doi'
@@ -125,6 +137,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CaiDatRoute: typeof CaiDatRoute
   HoSoRoute: typeof HoSoRoute
   MucDoSanSangRoute: typeof MucDoSanSangRoute
   TheoDoiRoute: typeof TheoDoiRoute
@@ -141,6 +154,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cai-dat': {
+      id: '/cai-dat'
+      path: '/cai-dat'
+      fullPath: '/cai-dat'
+      preLoaderRoute: typeof CaiDatRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ho-so': {
@@ -197,6 +217,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CaiDatRoute: CaiDatRoute,
   HoSoRoute: HoSoRoute,
   MucDoSanSangRoute: MucDoSanSangRoute,
   TheoDoiRoute: TheoDoiRoute,
