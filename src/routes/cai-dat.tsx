@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { COMPANY } from "@/lib/tracepass/data";
+import { useLang, setLang, useTranslations } from "@/lib/tracepass/i18n";
 
 export const Route = createFileRoute("/cai-dat")({
   head: () => ({
@@ -33,24 +34,34 @@ export const Route = createFileRoute("/cai-dat")({
 });
 
 function SettingsPage() {
+  const lang = useLang();
+  const t = useTranslations();
+
+  const alertRows: [string, boolean][] = [
+    [t.settings.alertExpiring, true],
+    [t.settings.alertMissing, true],
+    [t.settings.alertDppReminder, true],
+    [t.settings.alertWeeklyReport, false],
+  ];
+
   return (
     <AppShell>
-      <PageHeader title="Cài đặt" description="Thông tin doanh nghiệp và tùy chọn cảnh báo." />
+      <PageHeader title={t.settings.title} description={t.settings.description} />
 
       <div className="grid max-w-4xl gap-6">
         <div className="surface-card p-7">
-          <h2 className="text-[19px] font-semibold">Doanh nghiệp</h2>
+          <h2 className="text-[19px] font-semibold">{t.settings.companyHeading}</h2>
           <div className="mt-5 grid gap-5 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label>Tên doanh nghiệp</Label>
+              <Label>{t.settings.companyName}</Label>
               <Input defaultValue={COMPANY} className="h-11" />
             </div>
             <div className="space-y-2">
-              <Label>Mã số thuế</Label>
+              <Label>{t.settings.taxCode}</Label>
               <Input defaultValue="0301234567" className="h-11" />
             </div>
             <div className="space-y-2">
-              <Label>Thị trường chính</Label>
+              <Label>{t.settings.mainMarket}</Label>
               <Select defaultValue="EU">
                 <SelectTrigger className="h-11 w-full">
                   <SelectValue />
@@ -61,14 +72,14 @@ function SettingsPage() {
               </Select>
             </div>
             <div className="space-y-2">
-              <Label>Ngôn ngữ hiển thị</Label>
-              <Select defaultValue="vi">
+              <Label>{t.settings.language}</Label>
+              <Select value={lang} onValueChange={(v) => setLang(v === "en" ? "en" : "vi")}>
                 <SelectTrigger className="h-11 w-full">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="vi">Tiếng Việt</SelectItem>
-                  <SelectItem value="en">English</SelectItem>
+                  <SelectItem value="vi">{t.settings.languageVi}</SelectItem>
+                  <SelectItem value="en">{t.settings.languageEn}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -76,28 +87,23 @@ function SettingsPage() {
         </div>
 
         <div className="surface-card p-7">
-          <h2 className="text-[19px] font-semibold">Cảnh báo</h2>
+          <h2 className="text-[19px] font-semibold">{t.settings.alertsHeading}</h2>
           <div className="mt-5 space-y-4">
-            {[
-              ["Cảnh báo hồ sơ sắp hết hạn", true],
-              ["Cảnh báo hồ sơ còn thiếu", true],
-              ["Nhắc cập nhật DPP", true],
-              ["Báo cáo tổng hợp hằng tuần", false],
-            ].map(([label, on]) => (
+            {alertRows.map(([label, on]) => (
               <div
-                key={label as string}
+                key={label}
                 className="flex items-center justify-between border-b border-border pb-4 last:border-0 last:pb-0"
               >
-                <span className="text-[15px]">{label as string}</span>
-                <Switch defaultChecked={on as boolean} />
+                <span className="text-[15px]">{label}</span>
+                <Switch defaultChecked={on} />
               </div>
             ))}
           </div>
         </div>
 
         <div>
-          <Button size="lg" className="h-11" onClick={() => toast.success("Đã lưu cài đặt")}>
-            Lưu thay đổi
+          <Button size="lg" className="h-11" onClick={() => toast.success(t.settings.saved)}>
+            {t.settings.save}
           </Button>
         </div>
       </div>

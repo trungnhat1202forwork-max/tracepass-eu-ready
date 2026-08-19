@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "@/lib/tracepass/i18n";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -26,6 +27,7 @@ const NODE_ANGLES = [0, 72, 144, 216, 288];
 
 function Splash() {
   const [logoOk, setLogoOk] = useState(true);
+  const t = useTranslations();
 
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[image:var(--gradient-surface)] px-6">
@@ -89,13 +91,11 @@ function Splash() {
       </div>
 
       <div className="tp-fade-up mt-6 text-center" style={{ animationDelay: "0.9s" }}>
-        <p className="text-[22px] font-semibold tracking-tight text-primary">ToLocal, GoGlobal</p>
-        <p className="mt-2 text-[16px] text-muted-foreground">
-          Chuẩn hóa dữ liệu. Sẵn sàng cho thị trường EU.
-        </p>
+        <p className="text-[22px] font-semibold tracking-tight text-primary">{t.splash.tagline}</p>
+        <p className="mt-2 text-[16px] text-muted-foreground">{t.splash.subtitle}</p>
         <Button asChild size="lg" className="mt-8 h-12 px-8 text-[15px]">
           <Link to="/tong-quan">
-            Bắt đầu
+            {t.splash.cta}
             <ArrowRight className="size-4" />
           </Link>
         </Button>
