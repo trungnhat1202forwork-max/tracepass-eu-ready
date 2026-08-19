@@ -2,6 +2,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import {
   Bell,
   FileText,
+  Home,
   LayoutDashboard,
   Package,
   QrCode,
@@ -11,32 +12,48 @@ import {
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { COMPANY } from "@/lib/tracepass/data";
+import { useTranslations } from "@/lib/tracepass/i18n";
 import { Brandmark } from "./Brandmark";
 
-const nav = [
-  { to: "/tong-quan", label: "Tổng quan", icon: LayoutDashboard },
-  { to: "/san-pham", label: "Sản phẩm", icon: Package },
-  { to: "/ho-so", label: "Hồ sơ", icon: FileText },
-  { to: "/muc-do-san-sang", label: "Mức độ sẵn sàng", icon: ShieldCheck },
-  { to: "/dpp", label: "DPP", icon: QrCode },
-  { to: "/theo-doi", label: "Theo dõi", icon: Bell },
-  { to: "/cai-dat", label: "Cài đặt", icon: Settings },
-] as const;
+function useNav() {
+  const t = useTranslations();
+  return [
+    { to: "/tong-quan", label: t.nav.overview, icon: LayoutDashboard },
+    { to: "/san-pham", label: t.nav.products, icon: Package },
+    { to: "/ho-so", label: t.nav.profile, icon: FileText },
+    { to: "/muc-do-san-sang", label: t.nav.readiness, icon: ShieldCheck },
+    { to: "/dpp", label: t.nav.dpp, icon: QrCode },
+    { to: "/theo-doi", label: t.nav.tracking, icon: Bell },
+    { to: "/cai-dat", label: t.nav.settings, icon: Settings },
+  ] as const;
+}
 
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const t = useTranslations();
+  const nav = useNav();
 
   return (
     <div className="flex min-h-screen bg-background">
       <aside className="sticky top-0 hidden h-screen w-[264px] shrink-0 flex-col border-r border-sidebar-border bg-sidebar lg:flex">
-        <Link to="/tong-quan" className="flex items-center gap-3 px-6 py-6">
+        <div className="flex items-center gap-2 px-4 pt-6 pb-2">
+          <Link
+            to="/"
+            className="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground"
+            aria-label={t.shell.backHome}
+          >
+            <Home className="size-3.5" aria-hidden />
+            {t.shell.backHome}
+          </Link>
+        </div>
+        <Link to="/tong-quan" className="flex items-center gap-3 px-6 pt-2 pb-6">
           <Brandmark className="size-10" />
           <span className="leading-tight">
             <span className="block text-[17px] font-bold tracking-tight text-sidebar-foreground">
               TRACEPASS
             </span>
             <span className="block text-xs font-medium text-muted-foreground">
-              ToLocal, GoGlobal
+              {t.shell.tagline}
             </span>
           </span>
         </Link>
@@ -65,7 +82,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
         <div className="border-t border-sidebar-border px-6 py-4">
           <p className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
-            Doanh nghiệp
+            {t.shell.company}
           </p>
           <p className="mt-1 text-sm font-semibold text-sidebar-foreground">{COMPANY}</p>
         </div>
@@ -74,8 +91,17 @@ export function AppShell({ children }: { children: ReactNode }) {
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="sticky top-0 z-20 flex items-center justify-between gap-4 border-b border-border bg-card/85 px-6 py-3 backdrop-blur lg:px-10">
           <div className="flex items-center gap-3 lg:hidden">
-            <Brandmark className="size-8" />
+            <Link to="/" className="shrink-0" aria-label={t.shell.backHome}>
+              <Brandmark className="size-8" />
+            </Link>
             <span className="text-base font-bold">TRACEPASS</span>
+            <Link
+              to="/"
+              className="ml-1 flex items-center gap-1 rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              aria-label={t.shell.backHome}
+            >
+              <Home className="size-4" />
+            </Link>
           </div>
           <nav className="hidden items-center gap-1 lg:flex">
             {nav.slice(0, 6).map((item) => (
@@ -92,7 +118,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <Link
               to="/theo-doi"
               className="relative rounded-lg border border-border p-2 text-muted-foreground transition-colors hover:text-foreground"
-              aria-label="Theo dõi & cảnh báo"
+              aria-label={t.shell.alertsAria}
             >
               <Bell className="size-[18px]" />
               <span className="absolute -top-1 -right-1 flex size-4 items-center justify-center rounded-full bg-destructive text-[10px] font-bold text-destructive-foreground">
