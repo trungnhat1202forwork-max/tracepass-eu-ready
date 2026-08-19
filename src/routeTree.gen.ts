@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TongQuanRouteImport } from './routes/tong-quan'
+import { Route as SanPhamIndexRouteImport } from './routes/san-pham.index'
+import { Route as SanPhamMoiRouteImport } from './routes/san-pham.moi'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,31 +24,49 @@ const TongQuanRoute = TongQuanRouteImport.update({
   path: '/tong-quan',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SanPhamIndexRoute = SanPhamIndexRouteImport.update({
+  id: '/san-pham/',
+  path: '/san-pham/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SanPhamMoiRoute = SanPhamMoiRouteImport.update({
+  id: '/san-pham/moi',
+  path: '/san-pham/moi',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/tong-quan': typeof TongQuanRoute
+  '/san-pham/moi': typeof SanPhamMoiRoute
+  '/san-pham/': typeof SanPhamIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/tong-quan': typeof TongQuanRoute
+  '/san-pham/moi': typeof SanPhamMoiRoute
+  '/san-pham': typeof SanPhamIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/tong-quan': typeof TongQuanRoute
+  '/san-pham/moi': typeof SanPhamMoiRoute
+  '/san-pham/': typeof SanPhamIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/tong-quan'
+  fullPaths: '/' | '/tong-quan' | '/san-pham/moi' | '/san-pham/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/tong-quan'
-  id: '__root__' | '/' | '/tong-quan'
+  to: '/' | '/tong-quan' | '/san-pham/moi' | '/san-pham'
+  id: '__root__' | '/' | '/tong-quan' | '/san-pham/moi' | '/san-pham/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   TongQuanRoute: typeof TongQuanRoute
+  SanPhamMoiRoute: typeof SanPhamMoiRoute
+  SanPhamIndexRoute: typeof SanPhamIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +85,28 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TongQuanRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/san-pham/': {
+      id: '/san-pham/'
+      path: '/san-pham'
+      fullPath: '/san-pham/'
+      preLoaderRoute: typeof SanPhamIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/san-pham/moi': {
+      id: '/san-pham/moi'
+      path: '/san-pham/moi'
+      fullPath: '/san-pham/moi'
+      preLoaderRoute: typeof SanPhamMoiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   TongQuanRoute: TongQuanRoute,
+  SanPhamMoiRoute: SanPhamMoiRoute,
+  SanPhamIndexRoute: SanPhamIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
