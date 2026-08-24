@@ -17,10 +17,10 @@ import { Route as TheoDoiRouteImport } from './routes/theo-doi'
 import { Route as TongQuanRouteImport } from './routes/tong-quan'
 import { Route as DppIndexRouteImport } from './routes/dpp.index'
 import { Route as DppQrRouteImport } from './routes/dpp.qr'
-import { Route as DppCongKhaiIdRouteImport } from './routes/dpp.cong-khai.$id'
 import { Route as SanPhamIndexRouteImport } from './routes/san-pham.index'
 import { Route as SanPhamIdRouteImport } from './routes/san-pham.$id'
 import { Route as SanPhamMoiRouteImport } from './routes/san-pham.moi'
+import { Route as DppCongKhaiIdRouteImport } from './routes/dpp.cong-khai.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -62,11 +62,6 @@ const DppQrRoute = DppQrRouteImport.update({
   path: '/dpp/qr',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DppCongKhaiIdRoute = DppCongKhaiIdRouteImport.update({
-  id: '/dpp/cong-khai/$id',
-  path: '/dpp/cong-khai/$id',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const SanPhamIndexRoute = SanPhamIndexRouteImport.update({
   id: '/san-pham/',
   path: '/san-pham/',
@@ -82,6 +77,11 @@ const SanPhamMoiRoute = SanPhamMoiRouteImport.update({
   path: '/san-pham/moi',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DppCongKhaiIdRoute = DppCongKhaiIdRouteImport.update({
+  id: '/dpp/cong-khai/$id',
+  path: '/dpp/cong-khai/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -91,11 +91,11 @@ export interface FileRoutesByFullPath {
   '/theo-doi': typeof TheoDoiRoute
   '/tong-quan': typeof TongQuanRoute
   '/dpp/qr': typeof DppQrRoute
-  '/dpp/cong-khai/$id': typeof DppCongKhaiIdRoute
   '/san-pham/$id': typeof SanPhamIdRoute
   '/san-pham/moi': typeof SanPhamMoiRoute
   '/dpp/': typeof DppIndexRoute
   '/san-pham/': typeof SanPhamIndexRoute
+  '/dpp/cong-khai/$id': typeof DppCongKhaiIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -105,11 +105,11 @@ export interface FileRoutesByTo {
   '/theo-doi': typeof TheoDoiRoute
   '/tong-quan': typeof TongQuanRoute
   '/dpp/qr': typeof DppQrRoute
-  '/dpp/cong-khai/$id': typeof DppCongKhaiIdRoute
   '/san-pham/$id': typeof SanPhamIdRoute
   '/san-pham/moi': typeof SanPhamMoiRoute
   '/dpp': typeof DppIndexRoute
   '/san-pham': typeof SanPhamIndexRoute
+  '/dpp/cong-khai/$id': typeof DppCongKhaiIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -120,11 +120,11 @@ export interface FileRoutesById {
   '/theo-doi': typeof TheoDoiRoute
   '/tong-quan': typeof TongQuanRoute
   '/dpp/qr': typeof DppQrRoute
-  '/dpp/cong-khai/$id': typeof DppCongKhaiIdRoute
   '/san-pham/$id': typeof SanPhamIdRoute
   '/san-pham/moi': typeof SanPhamMoiRoute
   '/dpp/': typeof DppIndexRoute
   '/san-pham/': typeof SanPhamIndexRoute
+  '/dpp/cong-khai/$id': typeof DppCongKhaiIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -136,11 +136,11 @@ export interface FileRouteTypes {
     | '/theo-doi'
     | '/tong-quan'
     | '/dpp/qr'
-    | '/dpp/cong-khai/$id'
     | '/san-pham/$id'
     | '/san-pham/moi'
     | '/dpp/'
     | '/san-pham/'
+    | '/dpp/cong-khai/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -150,11 +150,11 @@ export interface FileRouteTypes {
     | '/theo-doi'
     | '/tong-quan'
     | '/dpp/qr'
-    | '/dpp/cong-khai/$id'
     | '/san-pham/$id'
     | '/san-pham/moi'
     | '/dpp'
     | '/san-pham'
+    | '/dpp/cong-khai/$id'
   id:
     | '__root__'
     | '/'
@@ -164,11 +164,11 @@ export interface FileRouteTypes {
     | '/theo-doi'
     | '/tong-quan'
     | '/dpp/qr'
-    | '/dpp/cong-khai/$id'
     | '/san-pham/$id'
     | '/san-pham/moi'
     | '/dpp/'
     | '/san-pham/'
+    | '/dpp/cong-khai/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -183,6 +183,7 @@ export interface RootRouteChildren {
   SanPhamMoiRoute: typeof SanPhamMoiRoute
   DppIndexRoute: typeof DppIndexRoute
   SanPhamIndexRoute: typeof SanPhamIndexRoute
+  DppCongKhaiIdRoute: typeof DppCongKhaiIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -243,13 +244,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DppQrRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/dpp/cong-khai/$id': {
-      id: '/dpp/cong-khai/$id'
-      path: '/dpp/cong-khai/$id'
-      fullPath: '/dpp/cong-khai/$id'
-      preLoaderRoute: typeof DppCongKhaiIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/san-pham/': {
       id: '/san-pham/'
       path: '/san-pham'
@@ -271,6 +265,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SanPhamMoiRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dpp/cong-khai/$id': {
+      id: '/dpp/cong-khai/$id'
+      path: '/dpp/cong-khai/$id'
+      fullPath: '/dpp/cong-khai/$id'
+      preLoaderRoute: typeof DppCongKhaiIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -282,11 +283,11 @@ const rootRouteChildren: RootRouteChildren = {
   TheoDoiRoute: TheoDoiRoute,
   TongQuanRoute: TongQuanRoute,
   DppQrRoute: DppQrRoute,
-  DppCongKhaiIdRoute: DppCongKhaiIdRoute,
   SanPhamIdRoute: SanPhamIdRoute,
   SanPhamMoiRoute: SanPhamMoiRoute,
   DppIndexRoute: DppIndexRoute,
   SanPhamIndexRoute: SanPhamIndexRoute,
+  DppCongKhaiIdRoute: DppCongKhaiIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
