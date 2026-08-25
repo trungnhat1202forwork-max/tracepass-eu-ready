@@ -1,4 +1,4 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import {
   Bell,
   FileText,
@@ -55,6 +55,11 @@ export function AppShell({ children }: { children: ReactNode }) {
   const nav = useNav();
   const { role, setRole, organizationName } = useWorkspaceRole();
   const { user, signOut } = useAuth();
+  const navigate = useNavigate();
+  const switchRole = (nextRole: "sme" | "supplier") => {
+    setRole(nextRole);
+    void navigate({ to: nextRole === "sme" ? "/tong-quan" : "/cong-nha-cung-cap" });
+  };
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -111,8 +116,8 @@ export function AppShell({ children }: { children: ReactNode }) {
               <ChevronsUpDown className="size-4 text-muted-foreground" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-60">
-              <DropdownMenuItem onClick={() => setRole("sme")}><span className="flex size-7 items-center justify-center rounded-md bg-primary text-[10px] font-bold text-primary-foreground">SME</span><span><strong className="block">Vision Textile JSC</strong><small className="text-muted-foreground">Không gian doanh nghiệp</small></span></DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setRole("supplier")}><span className="flex size-7 items-center justify-center rounded-md bg-emerald text-[10px] font-bold text-white">SUP</span><span><strong className="block">GreenWeave Mill</strong><small className="text-muted-foreground">Không gian nhà cung cấp</small></span></DropdownMenuItem>
+              <DropdownMenuItem onClick={() => switchRole("sme")}><span className="flex size-7 items-center justify-center rounded-md bg-primary text-[10px] font-bold text-primary-foreground">SME</span><span><strong className="block">Vision Textile JSC</strong><small className="text-muted-foreground">Không gian doanh nghiệp</small></span></DropdownMenuItem>
+              <DropdownMenuItem onClick={() => switchRole("supplier")}><span className="flex size-7 items-center justify-center rounded-md bg-emerald text-[10px] font-bold text-white">SUP</span><span><strong className="block">GreenWeave Mill</strong><small className="text-muted-foreground">Không gian nhà cung cấp</small></span></DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
