@@ -8,6 +8,7 @@ import {
   QrCode,
   Settings,
   ShieldCheck,
+  Network,
 } from "lucide-react";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
@@ -20,6 +21,7 @@ function useNav() {
   return [
     { to: "/tong-quan", label: t.nav.overview, icon: LayoutDashboard },
     { to: "/san-pham", label: t.nav.products, icon: Package },
+    { to: "/nha-cung-cap", label: "Nhà cung cấp", icon: Network },
     { to: "/ho-so", label: t.nav.profile, icon: FileText },
     { to: "/muc-do-san-sang", label: t.nav.readiness, icon: ShieldCheck },
     { to: "/dpp", label: t.nav.dpp, icon: QrCode },
@@ -104,7 +106,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             </Link>
           </div>
           <nav className="hidden items-center gap-1 lg:flex">
-            {nav.slice(0, 6).map((item) => (
+            {nav.slice(0, 7).map((item) => (
               <Link
                 key={item.to}
                 to={item.to}

@@ -15,6 +15,8 @@ import { Route as HoSoRouteImport } from './routes/ho-so'
 import { Route as MucDoSanSangRouteImport } from './routes/muc-do-san-sang'
 import { Route as TheoDoiRouteImport } from './routes/theo-doi'
 import { Route as TongQuanRouteImport } from './routes/tong-quan'
+import { Route as NhaCungCapRouteImport } from './routes/nha-cung-cap'
+import { Route as CongNhaCungCapRouteImport } from './routes/cong-nha-cung-cap'
 import { Route as DppIndexRouteImport } from './routes/dpp.index'
 import { Route as DppQrRouteImport } from './routes/dpp.qr'
 import { Route as SanPhamIndexRouteImport } from './routes/san-pham.index'
@@ -50,6 +52,16 @@ const TheoDoiRoute = TheoDoiRouteImport.update({
 const TongQuanRoute = TongQuanRouteImport.update({
   id: '/tong-quan',
   path: '/tong-quan',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NhaCungCapRoute = NhaCungCapRouteImport.update({
+  id: '/nha-cung-cap',
+  path: '/nha-cung-cap',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CongNhaCungCapRoute = CongNhaCungCapRouteImport.update({
+  id: '/cong-nha-cung-cap',
+  path: '/cong-nha-cung-cap',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DppIndexRoute = DppIndexRouteImport.update({
@@ -90,6 +102,8 @@ export interface FileRoutesByFullPath {
   '/muc-do-san-sang': typeof MucDoSanSangRoute
   '/theo-doi': typeof TheoDoiRoute
   '/tong-quan': typeof TongQuanRoute
+  '/nha-cung-cap': typeof NhaCungCapRoute
+  '/cong-nha-cung-cap': typeof CongNhaCungCapRoute
   '/dpp/qr': typeof DppQrRoute
   '/san-pham/$id': typeof SanPhamIdRoute
   '/san-pham/moi': typeof SanPhamMoiRoute
@@ -104,6 +118,8 @@ export interface FileRoutesByTo {
   '/muc-do-san-sang': typeof MucDoSanSangRoute
   '/theo-doi': typeof TheoDoiRoute
   '/tong-quan': typeof TongQuanRoute
+  '/nha-cung-cap': typeof NhaCungCapRoute
+  '/cong-nha-cung-cap': typeof CongNhaCungCapRoute
   '/dpp/qr': typeof DppQrRoute
   '/san-pham/$id': typeof SanPhamIdRoute
   '/san-pham/moi': typeof SanPhamMoiRoute
@@ -119,6 +135,8 @@ export interface FileRoutesById {
   '/muc-do-san-sang': typeof MucDoSanSangRoute
   '/theo-doi': typeof TheoDoiRoute
   '/tong-quan': typeof TongQuanRoute
+  '/nha-cung-cap': typeof NhaCungCapRoute
+  '/cong-nha-cung-cap': typeof CongNhaCungCapRoute
   '/dpp/qr': typeof DppQrRoute
   '/san-pham/$id': typeof SanPhamIdRoute
   '/san-pham/moi': typeof SanPhamMoiRoute
@@ -135,6 +153,8 @@ export interface FileRouteTypes {
     | '/muc-do-san-sang'
     | '/theo-doi'
     | '/tong-quan'
+    | '/nha-cung-cap'
+    | '/cong-nha-cung-cap'
     | '/dpp/qr'
     | '/san-pham/$id'
     | '/san-pham/moi'
@@ -149,6 +169,8 @@ export interface FileRouteTypes {
     | '/muc-do-san-sang'
     | '/theo-doi'
     | '/tong-quan'
+    | '/nha-cung-cap'
+    | '/cong-nha-cung-cap'
     | '/dpp/qr'
     | '/san-pham/$id'
     | '/san-pham/moi'
@@ -163,6 +185,8 @@ export interface FileRouteTypes {
     | '/muc-do-san-sang'
     | '/theo-doi'
     | '/tong-quan'
+    | '/nha-cung-cap'
+    | '/cong-nha-cung-cap'
     | '/dpp/qr'
     | '/san-pham/$id'
     | '/san-pham/moi'
@@ -178,6 +202,8 @@ export interface RootRouteChildren {
   MucDoSanSangRoute: typeof MucDoSanSangRoute
   TheoDoiRoute: typeof TheoDoiRoute
   TongQuanRoute: typeof TongQuanRoute
+  NhaCungCapRoute: typeof NhaCungCapRoute
+  CongNhaCungCapRoute: typeof CongNhaCungCapRoute
   DppQrRoute: typeof DppQrRoute
   SanPhamIdRoute: typeof SanPhamIdRoute
   SanPhamMoiRoute: typeof SanPhamMoiRoute
@@ -228,6 +254,20 @@ declare module '@tanstack/react-router' {
       path: '/tong-quan'
       fullPath: '/tong-quan'
       preLoaderRoute: typeof TongQuanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/nha-cung-cap': {
+      id: '/nha-cung-cap'
+      path: '/nha-cung-cap'
+      fullPath: '/nha-cung-cap'
+      preLoaderRoute: typeof NhaCungCapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cong-nha-cung-cap': {
+      id: '/cong-nha-cung-cap'
+      path: '/cong-nha-cung-cap'
+      fullPath: '/cong-nha-cung-cap'
+      preLoaderRoute: typeof CongNhaCungCapRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dpp/': {
@@ -282,6 +322,8 @@ const rootRouteChildren: RootRouteChildren = {
   MucDoSanSangRoute: MucDoSanSangRoute,
   TheoDoiRoute: TheoDoiRoute,
   TongQuanRoute: TongQuanRoute,
+  NhaCungCapRoute: NhaCungCapRoute,
+  CongNhaCungCapRoute: CongNhaCungCapRoute,
   DppQrRoute: DppQrRoute,
   SanPhamIdRoute: SanPhamIdRoute,
   SanPhamMoiRoute: SanPhamMoiRoute,
