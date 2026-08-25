@@ -9,31 +9,52 @@ import {
   Settings,
   ShieldCheck,
   Network,
+  Database,
+  Gauge,
+  Sparkles,
+  ChevronsUpDown,
 } from "lucide-react";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
-import { COMPANY } from "@/lib/tracepass/data";
 import { useTranslations } from "@/lib/tracepass/i18n";
 import { Brandmark } from "./Brandmark";
+import { useWorkspaceRole } from "@/lib/tracepass/role";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { useAuth } from "@/lib/tracepass/auth";
+import { Button } from "@/components/ui/button";
 
 function useNav() {
   const t = useTranslations();
-  return [
+  const { role } = useWorkspaceRole();
+  const sme = [
     { to: "/tong-quan", label: t.nav.overview, icon: LayoutDashboard },
     { to: "/san-pham", label: t.nav.products, icon: Package },
     { to: "/nha-cung-cap", label: "Nhà cung cấp", icon: Network },
+    { to: "/kho-du-lieu", label: "Kho dữ liệu", icon: Database },
     { to: "/ho-so", label: t.nav.profile, icon: FileText },
     { to: "/muc-do-san-sang", label: t.nav.readiness, icon: ShieldCheck },
     { to: "/dpp", label: t.nav.dpp, icon: QrCode },
     { to: "/theo-doi", label: t.nav.tracking, icon: Bell },
     { to: "/cai-dat", label: t.nav.settings, icon: Settings },
   ] as const;
+  const supplier = [
+    { to: "/cong-nha-cung-cap", label: "Tổng quan Supplier", icon: Gauge },
+    { to: "/nha-cung-cap", label: "Kết nối đối tác", icon: Network },
+    { to: "/kho-du-lieu", label: "Dữ liệu đã chia sẻ", icon: Database },
+    { to: "/ho-so", label: "Hồ sơ & chứng nhận", icon: FileText },
+    { to: "/muc-do-san-sang", label: "AI kiểm tra dữ liệu", icon: Sparkles },
+    { to: "/theo-doi", label: "Yêu cầu & thời hạn", icon: Bell },
+    { to: "/cai-dat", label: "Cài đặt", icon: Settings },
+  ] as const;
+  return role === "sme" ? sme : supplier;
 }
 
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const t = useTranslations();
   const nav = useNav();
+  const { role, setRole, organizationName } = useWorkspaceRole();
+  const { user, signOut } = useAuth();
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -82,11 +103,18 @@ export function AppShell({ children }: { children: ReactNode }) {
           })}
         </nav>
 
-        <div className="border-t border-sidebar-border px-6 py-4">
-          <p className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
-            {t.shell.company}
-          </p>
-          <p className="mt-1 text-sm font-semibold text-sidebar-foreground">{COMPANY}</p>
+        <div className="border-t border-sidebar-border p-4">
+          <DropdownMenu>
+            <DropdownMenuTrigger className="flex w-full items-center gap-3 rounded-xl border border-border bg-card p-3 text-left shadow-sm transition-colors hover:bg-muted/50">
+              <span className="flex size-9 items-center justify-center rounded-lg bg-primary text-xs font-bold text-primary-foreground">{role === "sme" ? "SME" : "SUP"}</span>
+              <span className="min-w-0 flex-1"><span className="block text-[11px] font-bold tracking-wide text-muted-foreground uppercase">Vai trò {role === "sme" ? "Doanh nghiệp" : "Nhà cung cấp"}</span><span className="block truncate text-sm font-semibold">{organizationName}</span></span>
+              <ChevronsUpDown className="size-4 text-muted-foreground" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-60">
+              <DropdownMenuItem onClick={() => setRole("sme")}><span className="flex size-7 items-center justify-center rounded-md bg-primary text-[10px] font-bold text-primary-foreground">SME</span><span><strong className="block">Vision Textile JSC</strong><small className="text-muted-foreground">Không gian doanh nghiệp</small></span></DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setRole("supplier")}><span className="flex size-7 items-center justify-center rounded-md bg-emerald text-[10px] font-bold text-white">SUP</span><span><strong className="block">GreenWeave Mill</strong><small className="text-muted-foreground">Không gian nhà cung cấp</small></span></DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </aside>
 
@@ -106,7 +134,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             </Link>
           </div>
           <nav className="hidden items-center gap-1 lg:flex">
-            {nav.slice(0, 7).map((item) => (
+            {nav.slice(0, 6).map((item) => (
               <Link
                 key={item.to}
                 to={item.to}
@@ -127,12 +155,12 @@ export function AppShell({ children }: { children: ReactNode }) {
                 7
               </span>
             </Link>
-            <div className="flex items-center gap-2 rounded-lg border border-border px-3 py-1.5">
+            {user ? <DropdownMenu><DropdownMenuTrigger className="flex items-center gap-2 rounded-lg border border-border px-3 py-1.5">
               <span className="flex size-7 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
-                VT
+                {(user.email?.slice(0,2) ?? "TP").toUpperCase()}
               </span>
-              <span className="hidden text-sm font-medium sm:block">{COMPANY}</span>
-            </div>
+              <span className="hidden text-sm font-medium sm:block">{organizationName}</span>
+            </DropdownMenuTrigger><DropdownMenuContent align="end" className="w-56"><div className="px-2 py-1.5"><p className="text-sm font-semibold">{user.user_metadata["full_name"] ?? "Thành viên TRACEPASS"}</p><p className="truncate text-xs text-muted-foreground">{user.email}</p></div><DropdownMenuItem onClick={()=>void signOut()}>Đăng xuất</DropdownMenuItem></DropdownMenuContent></DropdownMenu> : <Button asChild size="sm"><Link to="/dang-nhap">Đăng nhập B2B</Link></Button>}
           </div>
         </header>
 

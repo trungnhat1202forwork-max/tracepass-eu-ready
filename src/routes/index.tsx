@@ -1,105 +1,18 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Bot, Database, FileCheck2, Network, ShieldCheck, Sparkles, Users } from "lucide-react";
+import { Brandmark } from "@/components/tracepass/Brandmark";
+import { SupplyNetwork } from "@/components/tracepass/SupplyNetwork";
 import { Button } from "@/components/ui/button";
-import { useTranslations } from "@/lib/tracepass/i18n";
+import { Badge } from "@/components/ui/badge";
 
-export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "TRACEPASS — Chuẩn hóa dữ liệu cho thị trường EU" },
-      {
-        name: "description",
-        content:
-          "TRACEPASS giúp doanh nghiệp dệt may chuẩn hóa hồ sơ, đánh giá mức độ sẵn sàng và tạo DPP cho thị trường EU.",
-      },
-      { property: "og:title", content: "TRACEPASS — ToLocal, GoGlobal" },
-      {
-        property: "og:description",
-        content: "Chuẩn hóa dữ liệu. Sẵn sàng cho thị trường EU.",
-      },
-    ],
-  }),
-  component: Splash,
-});
+export const Route = createFileRoute("/")({ head: () => ({ meta: [{ title: "TRACEPASS — Hạ tầng dữ liệu tuân thủ chuỗi cung ứng" }, { name: "description", content: "Nền tảng B2B kết nối SME và nhà cung cấp, tạo lịch sử dữ liệu truy xuất và DPP cho thị trường EU." }] }), component: Landing });
 
-const NODE_ANGLES = [0, 72, 144, 216, 288];
-
-function Splash() {
-  const [logoOk, setLogoOk] = useState(true);
-  const t = useTranslations();
-
-  return (
-    <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[image:var(--gradient-surface)] px-6">
-      <div className="relative flex size-[340px] items-center justify-center">
-        <svg viewBox="0 0 340 340" className="absolute inset-0 size-full" aria-hidden>
-          <g className="tp-orbit">
-            <circle
-              cx="170"
-              cy="170"
-              r="150"
-              fill="none"
-              stroke="var(--primary)"
-              strokeOpacity="0.18"
-              strokeWidth="1.5"
-            />
-            <circle
-              cx="170"
-              cy="170"
-              r="150"
-              fill="none"
-              stroke="var(--emerald)"
-              strokeOpacity="0.55"
-              strokeWidth="2.5"
-              strokeDasharray="120 822"
-              strokeLinecap="round"
-            />
-            {NODE_ANGLES.map((angle, i) => {
-              const rad = (angle * Math.PI) / 180;
-              return (
-                <circle
-                  key={angle}
-                  cx={170 + 150 * Math.cos(rad)}
-                  cy={170 + 150 * Math.sin(rad)}
-                  r="4"
-                  className="tp-node"
-                  fill={i % 2 === 0 ? "var(--primary)" : "var(--emerald)"}
-                  style={{ animationDelay: `${i * 0.7}s` }}
-                />
-              );
-            })}
-          </g>
-        </svg>
-
-        <div className="tp-logo-core relative flex size-[188px] items-center justify-center">
-          {logoOk ? (
-            <img
-              src="/tracepass-logo.png"
-              alt="TRACEPASS"
-              width={188}
-              height={188}
-              className="size-full object-contain"
-              onError={() => setLogoOk(false)}
-            />
-          ) : (
-            <div className="flex size-full flex-col items-center justify-center rounded-3xl border border-border bg-card shadow-[var(--shadow-raised)]">
-              <span className="text-[26px] font-extrabold tracking-tight text-primary">TRACE</span>
-              <span className="text-[26px] font-extrabold tracking-tight text-emerald">PASS</span>
-            </div>
-          )}
-        </div>
-      </div>
-
-      <div className="tp-fade-up mt-6 text-center" style={{ animationDelay: "0.9s" }}>
-        <p className="text-[22px] font-semibold tracking-tight text-primary">{t.splash.tagline}</p>
-        <p className="mt-2 text-[16px] text-muted-foreground">{t.splash.subtitle}</p>
-        <Button asChild size="lg" className="mt-8 h-12 px-8 text-[15px]">
-          <Link to="/tong-quan">
-            {t.splash.cta}
-            <ArrowRight className="size-4" />
-          </Link>
-        </Button>
-      </div>
-    </div>
-  );
+function Landing() {
+  return <div className="min-h-screen overflow-hidden bg-background">
+    <header className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5"><div className="flex items-center gap-3"><Brandmark className="size-11"/><div><p className="text-lg font-extrabold tracking-tight">TRACEPASS</p><p className="text-[11px] font-bold tracking-[.18em] text-emerald uppercase">ToLocal, GoGlobal</p></div></div><div className="flex items-center gap-3"><Badge variant="outline" className="hidden sm:flex"><span className="mr-2 size-2 rounded-full bg-emerald tp-live-dot"/>Hệ thống đang hoạt động</Badge><Button asChild variant="ghost"><Link to="/tong-quan">Đăng nhập</Link></Button><Button asChild><Link to="/tong-quan">Vào workspace<ArrowRight className="size-4"/></Link></Button></div></header>
+    <main>
+      <section className="relative mx-auto grid max-w-7xl items-center gap-12 px-6 pt-12 pb-20 lg:grid-cols-[.9fr_1.1fr] lg:pt-20"><div className="relative z-10"><Badge className="mb-5 border border-primary/15 bg-primary-soft text-primary hover:bg-primary-soft"><Sparkles className="mr-1.5 size-3.5"/>Hạ tầng dữ liệu tuân thủ B2B</Badge><h1 className="max-w-3xl text-5xl leading-[1.05] font-extrabold tracking-[-.045em] sm:text-6xl">Biến dữ liệu rời rạc thành <span className="bg-[image:var(--gradient-brand)] bg-clip-text text-transparent">hộ chiếu số có lịch sử.</span></h1><p className="mt-6 max-w-xl text-lg leading-8 text-muted-foreground">TRACEPASS kết nối doanh nghiệp xuất khẩu và nhà cung cấp trên một luồng dữ liệu có bằng chứng, quyền chia sẻ, phiên bản và dấu vết xác nhận — sẵn sàng cho DPP tại EU.</p><div className="mt-8 flex flex-wrap gap-3"><Button asChild size="lg" className="h-12 px-7"><Link to="/tong-quan">Workspace SME<ArrowRight className="size-4"/></Link></Button><Button asChild size="lg" variant="outline" className="h-12 px-7"><Link to="/cong-nha-cung-cap">Cổng nhà cung cấp<Users className="size-4"/></Link></Button></div><div className="mt-9 grid max-w-xl grid-cols-3 gap-3">{[["11+","Bảng dữ liệu thật"],["5","Mắt xích kết nối"],["100%","Có audit trail"]].map(([v,l])=><div key={l} className="rounded-xl border bg-card p-3"><p className="text-xl font-bold">{v}</p><p className="text-xs text-muted-foreground">{l}</p></div>)}</div></div><div className="relative"><div className="absolute -inset-16 -z-10 rounded-full bg-primary/5 blur-3xl"/><div className="tp-float rounded-3xl border bg-card p-4 shadow-[var(--shadow-raised)]"><SupplyNetwork compact/><div className="grid grid-cols-3 gap-3 p-2">{[[Bot,"AI kiểm tra","27 trường"],[ShieldCheck,"EU readiness","82%"],[FileCheck2,"DPP version","v1.5"]].map(([Icon,l,v])=>{const I=Icon as typeof Bot;return <div key={String(l)} className="rounded-xl bg-muted/60 p-3"><I className="mb-2 size-5 text-primary"/><p className="text-xs text-muted-foreground">{String(l)}</p><p className="font-bold">{String(v)}</p></div>})}</div></div></div></section>
+      <section className="border-y bg-card"><div className="mx-auto grid max-w-7xl gap-4 px-6 py-12 md:grid-cols-4">{[[Network,"Kết nối hai chiều","SME gửi yêu cầu; supplier phản hồi đúng trường dữ liệu."],[Database,"Kho dữ liệu lịch sử","Không ghi đè. Mọi thay đổi tạo phiên bản và audit trail."],[Bot,"AI có kiểm chứng","Trích xuất, phát hiện khoảng trống và luôn yêu cầu con người xác nhận."],[FileCheck2,"DPP có phiên bản","Đóng gói dữ liệu đã xác nhận thành từng snapshot có thể truy vết."]].map(([Icon,title,desc])=>{const I=Icon as typeof Network;return <article key={String(title)} className="rounded-2xl border bg-background p-5"><span className="flex size-11 items-center justify-center rounded-xl bg-primary-soft text-primary"><I className="size-5"/></span><h2 className="mt-4 font-bold">{String(title)}</h2><p className="mt-2 text-sm leading-6 text-muted-foreground">{String(desc)}</p></article>})}</div></section>
+    </main>
+  </div>;
 }

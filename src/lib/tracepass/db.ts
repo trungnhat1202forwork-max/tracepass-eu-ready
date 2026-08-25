@@ -424,3 +424,28 @@ export async function logAiRun(input: {
     result_json: input.resultJson ?? {},
   });
 }
+
+export type AiComplianceResult = {
+  model: string;
+  mode: string;
+  coverage: number;
+  confidence: number;
+  matches: Array<{ code: string; title: string; source: string; similarity: number; relevant: boolean }>;
+  gaps: Array<{ code: string; title: string; reason: string }>;
+  humanReviewRequired: boolean;
+  analyzedAt: string;
+};
+
+export function useAiComplianceAnalysis() {
+  return useMutation({
+    mutationFn: async (input: { text: string; productId?: string | null }) => {
+      const { data, error } = await supabase.functions.invoke<AiComplianceResult>(
+        "tracepass-ai-analyze",
+        { body: input },
+      );
+      if (error) throw new Error(error.message);
+      if (!data) throw new Error("AI không trả về kết quả");
+      return data;
+    },
+  });
+}

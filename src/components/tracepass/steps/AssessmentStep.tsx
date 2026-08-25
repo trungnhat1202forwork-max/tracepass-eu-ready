@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { RefreshCw, Wrench } from "lucide-react";
+import { Bot, BrainCircuit, RefreshCw, Sparkles, Wrench } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,10 +13,14 @@ import { ReadinessBadge } from "@/components/tracepass/StatusBadge";
 import { readinessLabel, requirements, type Requirement } from "@/lib/tracepass/data";
 import { setAppState, useAppState } from "@/lib/tracepass/store";
 import { cn } from "@/lib/utils";
+import { useAiComplianceAnalysis, type AiComplianceResult } from "@/lib/tracepass/db";
+import { Progress } from "@/components/ui/progress";
 
 export function AssessmentStep({ onNext }: { onNext: () => void }) {
   const { issuesResolved } = useAppState();
   const [selected, setSelected] = useState<Requirement | null>(null);
+  const ai = useAiComplianceAnalysis();
+  const [aiResult, setAiResult] = useState<AiComplianceResult | null>(null);
 
   const rows: Requirement[] = requirements.map((r) =>
     issuesResolved && r.status !== "ready"
@@ -38,6 +42,16 @@ export function AssessmentStep({ onNext }: { onNext: () => void }) {
     critical: rows.filter((r) => r.status === "critical").length,
   };
   const overall = issuesResolved ? "ready" : "action";
+
+  async function runAi() {
+    try {
+      const result = await ai.mutateAsync({ text: rows.map((r) => `${r.name}. Nguồn: ${r.legal}. Bằng chứng: ${r.evidence}. Vấn đề: ${r.issue}.`).join("\n") });
+      setAiResult(result);
+      toast.success("Supabase AI đã hoàn tất phân tích ngữ nghĩa");
+    } catch (error) {
+      toast.error(error instanceof Error ? `${error.message} — hãy đăng nhập B2B để chạy AI` : "Không thể chạy AI");
+    }
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -67,6 +81,14 @@ export function AssessmentStep({ onNext }: { onNext: () => void }) {
             </div>
           ))}
         </div>
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-[1fr_320px]">
+        <div className="surface-card p-5">
+          <div className="flex flex-wrap items-start justify-between gap-4"><div className="flex gap-3"><span className="flex size-11 items-center justify-center rounded-xl bg-primary-soft text-primary"><BrainCircuit className="size-6" /></span><div><div className="flex items-center gap-2"><h2 className="font-bold">TRACEPASS AI Compliance</h2><span className="rounded-full bg-emerald-soft px-2 py-0.5 text-[11px] font-bold text-emerald">LIVE · SUPABASE EDGE</span></div><p className="mt-1 text-sm text-muted-foreground">Mô hình embedding gte-small đối chiếu ngữ nghĩa hồ sơ với yêu cầu EU.</p></div></div><Button onClick={runAi} disabled={ai.isPending}><Sparkles className="size-4" />{ai.isPending ? "AI đang phân tích..." : "Chạy AI thật"}</Button></div>
+          {aiResult ? <div className="mt-5 grid gap-4 md:grid-cols-[200px_1fr]"><div className="rounded-xl border bg-muted/40 p-4"><p className="text-xs font-semibold text-muted-foreground uppercase">Coverage score</p><p className="mt-2 text-4xl font-bold text-primary">{aiResult.coverage}%</p><Progress className="mt-3" value={aiResult.coverage} /><p className="mt-2 text-xs text-muted-foreground">Confidence {Math.round(aiResult.confidence * 100)}%</p></div><div className="grid gap-2 sm:grid-cols-2">{aiResult.matches.slice(0, 4).map((m) => <div key={m.code} className="rounded-xl border p-3"><div className="flex items-center justify-between"><strong className="text-sm">{m.code}</strong><span className={cn("text-xs font-bold", m.relevant ? "text-emerald" : "text-amber")}>{Math.round(m.similarity * 100)}%</span></div><p className="mt-1 text-xs leading-5 text-muted-foreground">{m.title}</p></div>)}</div></div> : <div className="mt-5 flex items-center gap-3 rounded-xl border border-dashed p-4 text-sm text-muted-foreground"><Bot className="size-5 text-primary" />Nhấn “Chạy AI thật” để gọi Edge Function có xác thực. Kết quả có model, độ tin cậy và timestamp.</div>}
+        </div>
+        <div className="surface-card p-5"><p className="text-xs font-semibold text-muted-foreground uppercase">Nguyên tắc AI</p><div className="mt-4 space-y-3">{["AI đề xuất, con người xác nhận", "Kết quả có model + timestamp", "Không tự ý phát hành DPP", "Lưu lịch sử mỗi lượt phân tích"].map((x) => <div key={x} className="flex items-start gap-2 text-sm"><span className="mt-1 size-2 rounded-full bg-emerald" />{x}</div>)}</div></div>
       </div>
 
       <div className="surface-card overflow-hidden">
@@ -117,7 +139,7 @@ export function AssessmentStep({ onNext }: { onNext: () => void }) {
             <Wrench className="size-4" />
             Xử lý vấn đề
           </Button>
-          <Button variant="ghost" onClick={() => toast.success("Đã chạy lại đánh giá")}>
+          <Button variant="ghost" onClick={runAi} disabled={ai.isPending}>
             <RefreshCw className="size-4" />
             Chạy lại đánh giá
           </Button>

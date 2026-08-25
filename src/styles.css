@@ -241,6 +241,14 @@
   }
 }
 
+@keyframes tp-flow { to { stroke-dashoffset: -44; } }
+@keyframes tp-live { 0%,100% { box-shadow: 0 0 0 0 oklch(0.62 0.185 142 / .35); } 50% { box-shadow: 0 0 0 7px oklch(0.62 0.185 142 / 0); } }
+@keyframes tp-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+
+.tp-flow-line { animation: tp-flow 2.3s linear infinite; }
+.tp-live-dot { animation: tp-live 1.8s ease-in-out infinite; }
+.tp-float { animation: tp-float 4s ease-in-out infinite; }
+
 .tp-logo-core {
   animation: tp-logo-in 800ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
@@ -265,4 +273,5 @@
   .tp-fade-up {
     animation: none !important;
   }
+  .tp-flow-line, .tp-live-dot, .tp-float { animation: none !important; }
 }

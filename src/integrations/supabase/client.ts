@@ -14,5 +14,5 @@ const SUPABASE_PUBLISHABLE_KEY =
   "sb_publishable_HNkhUcCBOCtQt7LMil9CYw_0FQyniDd";
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
-  auth: { persistSession: false, autoRefreshToken: false },
+  auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true },
 });
