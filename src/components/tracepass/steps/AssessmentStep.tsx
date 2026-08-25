@@ -13,13 +13,14 @@ import { ReadinessBadge } from "@/components/tracepass/StatusBadge";
 import { readinessLabel, requirements, type Requirement } from "@/lib/tracepass/data";
 import { setAppState, useAppState } from "@/lib/tracepass/store";
 import { cn } from "@/lib/utils";
-import { useAiComplianceAnalysis, type AiComplianceResult } from "@/lib/tracepass/db";
+import { useAiComplianceAnalysis, useProducts, type AiComplianceResult } from "@/lib/tracepass/db";
 import { Progress } from "@/components/ui/progress";
 
 export function AssessmentStep({ onNext }: { onNext: () => void }) {
   const { issuesResolved } = useAppState();
   const [selected, setSelected] = useState<Requirement | null>(null);
   const ai = useAiComplianceAnalysis();
+  const products = useProducts().data ?? [];
   const [aiResult, setAiResult] = useState<AiComplianceResult | null>(null);
 
   const rows: Requirement[] = requirements.map((r) =>
@@ -45,7 +46,7 @@ export function AssessmentStep({ onNext }: { onNext: () => void }) {
 
   async function runAi() {
     try {
-      const result = await ai.mutateAsync({ text: rows.map((r) => `${r.name}. Nguồn: ${r.legal}. Bằng chứng: ${r.evidence}. Vấn đề: ${r.issue}.`).join("\n") });
+      const result = await ai.mutateAsync({ productId: products[0]?.id ?? null, text: rows.map((r) => `${r.name}. Nguồn: ${r.legal}. Bằng chứng: ${r.evidence}. Vấn đề: ${r.issue}.`).join("\n") });
       setAiResult(result);
       toast.success("Supabase AI đã hoàn tất phân tích ngữ nghĩa");
     } catch (error) {
