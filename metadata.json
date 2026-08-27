@@ -1,0 +1,6 @@
+{
+  "name": "TracePass EU Ready",
+  "description": "EU Digital Product Passport (DPP) compliance and supply chain traceability platform for textile and apparel exporters",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

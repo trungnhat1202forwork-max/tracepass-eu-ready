@@ -85,7 +85,10 @@ function Dashboard() {
             </thead>
             <tbody>
               {products.map((p) => (
-                <tr key={p.id} className="border-t border-border transition-colors hover:bg-muted/40">
+                <tr
+                  key={p.id}
+                  className="border-t border-border transition-colors hover:bg-muted/40"
+                >
                   <td className="px-6 py-3">
                     <Link
                       to="/san-pham/$id"
@@ -142,10 +145,7 @@ function Dashboard() {
           <div className="surface-card overflow-hidden">
             <div className="flex items-center justify-between border-b border-border px-6 py-4">
               <h2 className="text-[19px] font-semibold">Cảnh báo gần đây</h2>
-              <Link
-                to="/theo-doi"
-                className="text-sm font-medium text-primary hover:underline"
-              >
+              <Link to="/theo-doi" className="text-sm font-medium text-primary hover:underline">
                 Theo dõi
               </Link>
             </div>

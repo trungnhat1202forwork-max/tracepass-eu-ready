@@ -51,9 +51,7 @@ export function Stepper({
               </span>
               {step.label}
             </button>
-            {i < STEPS.length - 1 ? (
-              <span className="mx-1 h-px w-5 bg-border" aria-hidden />
-            ) : null}
+            {i < STEPS.length - 1 ? <span className="mx-1 h-px w-5 bg-border" aria-hidden /> : null}
           </li>
         );
       })}

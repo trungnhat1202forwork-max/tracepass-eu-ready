@@ -161,7 +161,12 @@ export function DocsStep({ onNext }: { onNext: () => void }) {
               : "Hồ sơ sẵn sàng để trích xuất dữ liệu."}
           </p>
         )}
-        <Button size="lg" className="h-11" onClick={aiProcessed ? onNext : runAi} disabled={processing}>
+        <Button
+          size="lg"
+          className="h-11"
+          onClick={aiProcessed ? onNext : runAi}
+          disabled={processing}
+        >
           <Sparkles className="size-4" />
           {aiProcessed ? "Xem dữ liệu trích xuất" : "Xử lý bằng AI"}
         </Button>

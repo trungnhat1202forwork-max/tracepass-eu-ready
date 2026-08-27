@@ -1,5 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { BarChart3, CheckCircle2, Clock3, Database, FileCheck2, FileUp, LockKeyhole, Send, Sparkles, Users } from "lucide-react";
+import {
+  BarChart3,
+  CheckCircle2,
+  Clock3,
+  Database,
+  FileCheck2,
+  FileUp,
+  LockKeyhole,
+  Send,
+  Sparkles,
+  Users,
+} from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { AppShell, PageHeader } from "@/components/tracepass/AppShell";
@@ -8,32 +19,374 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useDataRecords, useDocuments, useSupplierRequests, useSuppliers, useSubmitSupplierResponse } from "@/lib/tracepass/db";
+import {
+  useDataRecords,
+  useDocuments,
+  useSupplierRequests,
+  useSuppliers,
+  useSubmitSupplierResponse,
+} from "@/lib/tracepass/db";
 import { useWorkspaceRole } from "@/lib/tracepass/role";
 
-export const Route = createFileRoute("/cong-nha-cung-cap")({ head: () => ({ meta: [{ title: "Supplier Workspace | TRACEPASS" }] }), component: SupplierWorkspace });
+export const Route = createFileRoute("/cong-nha-cung-cap")({
+  head: () => ({ meta: [{ title: "Supplier Workspace | TRACEPASS" }] }),
+  component: SupplierWorkspace,
+});
 
-const suggested: Record<string,string>={material_origin:"Cotton — Gujarat, India",fiber_composition:"95% Cotton / 5% Elastane",facility:"GreenWeave Spinning Mill — Ahmedabad",certificate:"GRS 4.0 — CU-112233"};
+const suggested: Record<string, string> = {
+  material_origin: "Cotton — Gujarat, India",
+  fiber_composition: "95% Cotton / 5% Elastane",
+  facility: "GreenWeave Spinning Mill — Ahmedabad",
+  certificate: "GRS 4.0 — CU-112233",
+};
 
-function SupplierWorkspace(){
-  const {setRole}=useWorkspaceRole(); useEffect(()=>setRole("supplier"),[setRole]);
-  const suppliers=useSuppliers().data??[]; const requests=useSupplierRequests().data??[]; const records=useDataRecords().data??[]; const documents=useDocuments().data??[]; const submit=useSubmitSupplierResponse();
-  const [supplierId,setSupplierId]=useState(""); const pending=useMemo(()=>requests.filter(r=>r.status==="pending"&&(!supplierId||r.supplier_id===supplierId)),[requests,supplierId]);
-  const [requestId,setRequestId]=useState(""); const request=pending.find(r=>r.id===requestId)??pending[0]; const [values,setValues]=useState<Record<string,string>>({}); const [evidence,setEvidence]=useState("GRS_Certificate_2026.pdf"); const [permission,setPermission]=useState("same_material_12_months");
-  useEffect(()=>{if(suppliers[0]&&!supplierId)setSupplierId(suppliers[0].id)},[supplierId,suppliers]);
-  useEffect(()=>{if(request&&request.id!==requestId)setRequestId(request.id)},[request,requestId]);
-  const supplier=suppliers.find(s=>s.id===supplierId)??suppliers[0]; const supplierName=supplier?.tracepass_organizations?.name??supplier?.supplier_code??"GreenWeave Spinning Mill";
-  async function send(){if(!request)return;const fields=(request.requested_fields??[]).map(f=>({key:f.key,label:f.label,value:values[f.key]??suggested[f.key]??"",status:"supplier_confirmed"}));if(fields.some(f=>!f.value.trim())){toast.error("Vui lòng điền đủ trường bắt buộc");return;}try{await submit.mutateAsync({request,supplierName,fields,evidenceName:evidence||null,permissionScope:permission,productId:request.product_id});toast.success("Đã gửi phản hồi và ghi vào audit trail");setValues({});}catch(e){toast.error(e instanceof Error?`${e.message} — cần đăng nhập tài khoản Supplier`:"Không thể gửi phản hồi");}}
-  return <AppShell>
-    <PageHeader title={`Xin chào, ${supplierName}`} description="Không gian làm việc dành cho nhà cung cấp: quản lý yêu cầu, bằng chứng và quyền chia sẻ dữ liệu với đối tác SME." action={<Badge className="h-9 bg-emerald-soft px-3 text-emerald hover:bg-emerald-soft"><LockKeyhole className="mr-1.5 size-4"/>Supplier-secured workspace</Badge>}/>
-    <div className="grid gap-4 md:grid-cols-4">{[["Yêu cầu đang chờ",pending.length,Clock3,"text-amber"],["Dữ liệu đã chia sẻ",records.filter(r=>!supplier||r.supplier_id===supplier.id).length,Database,"text-primary"],["Bằng chứng",documents.filter(d=>!supplier||d.supplier_id===supplier.id).length,FileCheck2,"text-emerald"],["Đối tác đang kết nối",1,Users,"text-info"]].map(([l,v,Ic,t])=>{const I=Ic as typeof Clock3;return <div key={String(l)} className="surface-card p-5"><div className="flex items-center justify-between"><p className="text-sm text-muted-foreground">{String(l)}</p><I className={`size-5 ${t}`}/></div><p className="mt-3 text-3xl font-bold">{Number(v)}</p></div>})}</div>
-    <div className="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]"><div className="surface-card p-5"><div className="mb-4 flex items-center justify-between"><div><h2 className="text-lg font-semibold">Vị trí trong chuỗi TRACEPASS</h2><p className="text-sm text-muted-foreground">Dữ liệu của bạn chỉ đi qua những kết nối được cấp quyền</p></div><Badge variant="outline"><span className="mr-2 size-2 rounded-full bg-emerald tp-live-dot"/>Đang đồng bộ</Badge></div><SupplyNetwork compact/></div><div className="surface-card p-5"><div className="flex items-center gap-2"><BarChart3 className="size-5 text-primary"/><h2 className="font-semibold">Data health</h2></div><div className="mt-5 space-y-4">{[["Độ đầy đủ",86,"bg-emerald"],["Bằng chứng hợp lệ",72,"bg-primary"],["Phản hồi đúng hạn",94,"bg-info"],["Dữ liệu tái sử dụng",63,"bg-amber"]].map(([l,v,c])=><div key={String(l)}><div className="mb-1.5 flex justify-between text-sm"><span>{String(l)}</span><strong>{Number(v)}%</strong></div><div className="h-2 rounded-full bg-muted"><div className={`h-full rounded-full ${c}`} style={{width:`${v}%`}}/></div></div>)}</div></div></div>
-    <Tabs defaultValue="requests" className="mt-6"><TabsList><TabsTrigger value="requests">Yêu cầu cần xử lý ({pending.length})</TabsTrigger><TabsTrigger value="records">Dữ liệu đã chia sẻ</TabsTrigger><TabsTrigger value="partners">Đối tác & quyền truy cập</TabsTrigger></TabsList>
-      <TabsContent value="requests" className="mt-4"><div className="grid gap-6 lg:grid-cols-[320px_minmax(0,1fr)]"><aside className="surface-card h-fit p-4"><Label>Đang xem với tư cách</Label><Select value={supplierId} onValueChange={v=>{setSupplierId(v);setRequestId("")}}><SelectTrigger className="mt-2"><SelectValue/></SelectTrigger><SelectContent>{suppliers.map(s=><SelectItem key={s.id} value={s.id}>{s.tracepass_organizations?.name??s.supplier_code}</SelectItem>)}</SelectContent></Select><div className="mt-5 space-y-2">{pending.map(r=><button key={r.id} onClick={()=>setRequestId(r.id)} className={`w-full rounded-xl border p-3 text-left ${request?.id===r.id?"border-primary bg-primary/5":"hover:bg-muted/50"}`}><p className="text-sm font-semibold">{r.title}</p><p className="mt-1 text-xs text-muted-foreground">Hạn {r.due_date??"—"}</p></button>)}{!pending.length?<p className="rounded-lg bg-muted p-4 text-center text-sm text-muted-foreground"><CheckCircle2 className="mx-auto mb-2 size-6 text-emerald"/>Đã xử lý hết yêu cầu</p>:null}</div></aside><section className="surface-card overflow-hidden">{request?<><div className="border-b p-5"><div className="flex justify-between gap-3"><div><h2 className="text-xl font-bold">{request.title}</h2><p className="mt-1 text-sm text-muted-foreground">Từ Vision Textile JSC · hạn {request.due_date??"—"}</p></div><Badge variant="outline" className="border-amber/30 bg-amber/10 text-amber">Đang chờ</Badge></div><div className="mt-4 flex gap-3 rounded-xl border border-primary/20 bg-primary/5 p-3"><Sparkles className="size-5 shrink-0 text-primary"/><p className="text-sm"><strong>AI gợi ý từ lịch sử:</strong> kiểm tra lại trước khi gửi. TRACEPASS không tự xác nhận thay bạn.</p></div></div><div className="grid gap-5 p-5">{(request.requested_fields??[]).map(f=><div key={f.key} className="grid gap-2"><Label>{f.label}{f.required?<span className="text-destructive"> *</span>:null}</Label><Input value={values[f.key]??suggested[f.key]??""} onChange={e=>setValues(x=>({...x,[f.key]:e.target.value}))}/><p className="text-xs text-muted-foreground">Nguồn gợi ý: bản ghi đã xác nhận gần nhất</p></div>)}<div className="grid gap-2"><Label>Bằng chứng</Label><div className="flex gap-2"><Input value={evidence} onChange={e=>setEvidence(e.target.value)}/><Button variant="outline"><FileUp className="size-4"/>Chọn tệp</Button></div></div><div className="grid gap-2"><Label>Phạm vi cho phép tái sử dụng</Label><Select value={permission} onValueChange={setPermission}><SelectTrigger><SelectValue/></SelectTrigger><SelectContent><SelectItem value="request_only">Chỉ yêu cầu này</SelectItem><SelectItem value="same_material_12_months">Cùng nguyên liệu trong 12 tháng</SelectItem><SelectItem value="same_supplier_until_change">Các lô đến khi có thay đổi</SelectItem></SelectContent></Select></div></div><div className="flex justify-end border-t bg-muted/30 p-4"><Button onClick={send} disabled={submit.isPending}><Send className="size-4"/>{submit.isPending?"Đang gửi...":"Ký xác nhận & gửi dữ liệu"}</Button></div></>:<div className="p-14 text-center text-muted-foreground">Chọn một yêu cầu để xử lý.</div>}</section></div></TabsContent>
-      <TabsContent value="records" className="mt-4"><div className="surface-card overflow-hidden"><table className="w-full text-sm"><thead className="bg-muted/60 text-left"><tr><th className="p-4">Dữ liệu</th><th className="p-4">Giá trị</th><th className="p-4">Nguồn</th><th className="p-4">Quyền chia sẻ</th><th className="p-4">Phiên bản</th></tr></thead><tbody>{records.filter(r=>!supplier||r.supplier_id===supplier.id).map(r=><tr key={r.id} className="border-t"><td className="p-4 font-semibold">{r.data_key}</td><td className="p-4">{r.data_value}</td><td className="p-4 text-muted-foreground">{r.source}</td><td className="p-4"><Badge variant="outline">{r.reuse_scope}</Badge></td><td className="p-4">v{r.version}</td></tr>)}</tbody></table></div></TabsContent>
-      <TabsContent value="partners" className="mt-4"><div className="surface-card p-6"><div className="flex items-start justify-between"><div className="flex gap-3"><span className="flex size-11 items-center justify-center rounded-xl bg-primary-soft text-primary"><Users className="size-5"/></span><div><h2 className="font-bold">Vision Textile JSC</h2><p className="text-sm text-muted-foreground">SME · Việt Nam · Kết nối đang hoạt động</p></div></div><Badge className="bg-emerald-soft text-emerald hover:bg-emerald-soft">Đã xác minh</Badge></div><div className="mt-5 grid gap-3 sm:grid-cols-3">{[["Được yêu cầu dữ liệu","Có"],["Tự động tái sử dụng","Theo từng phạm vi"],["Quyền phát hành DPP","Không — SME xác nhận"]].map(([k,v])=><div key={k} className="rounded-xl border p-4"><p className="text-xs text-muted-foreground">{k}</p><p className="mt-1 text-sm font-semibold">{v}</p></div>)}</div></div></TabsContent>
-    </Tabs>
-  </AppShell>;
+function SupplierWorkspace() {
+  const suppliersQ = useSuppliers();
+  const requestsQ = useSupplierRequests();
+  const recordsQ = useDataRecords();
+  const documentsQ = useDocuments();
+  const suppliers = useMemo(() => suppliersQ.data ?? [], [suppliersQ.data]);
+  const requests = useMemo(() => requestsQ.data ?? [], [requestsQ.data]);
+  const records = useMemo(() => recordsQ.data ?? [], [recordsQ.data]);
+  const documents = useMemo(() => documentsQ.data ?? [], [documentsQ.data]);
+  const submit = useSubmitSupplierResponse();
+  const [supplierId, setSupplierId] = useState("");
+  const pending = useMemo(
+    () =>
+      requests.filter(
+        (r) => r.status === "pending" && (!supplierId || r.supplier_id === supplierId),
+      ),
+    [requests, supplierId],
+  );
+  const [requestId, setRequestId] = useState("");
+  const request = pending.find((r) => r.id === requestId) ?? pending[0];
+  const [values, setValues] = useState<Record<string, string>>({});
+  const [evidence, setEvidence] = useState("GRS_Certificate_2026.pdf");
+  const [permission, setPermission] = useState("same_material_12_months");
+  useEffect(() => {
+    if (suppliers[0] && !supplierId) setSupplierId(suppliers[0].id);
+  }, [supplierId, suppliers]);
+  useEffect(() => {
+    if (request && request.id !== requestId) setRequestId(request.id);
+  }, [request, requestId]);
+  const supplier = suppliers.find((s) => s.id === supplierId) ?? suppliers[0];
+  const supplierName =
+    supplier?.tracepass_organizations?.name ??
+    supplier?.supplier_code ??
+    "GreenWeave Spinning Mill";
+  async function send() {
+    if (!request) return;
+    const fields = (request.requested_fields ?? []).map((f) => ({
+      key: f.key,
+      label: f.label,
+      value: values[f.key] ?? suggested[f.key] ?? "",
+      status: "supplier_confirmed",
+    }));
+    if (fields.some((f) => !f.value.trim())) {
+      toast.error("Vui lòng điền đủ trường bắt buộc");
+      return;
+    }
+    try {
+      await submit.mutateAsync({
+        request,
+        supplierName,
+        fields,
+        evidenceName: evidence || null,
+        permissionScope: permission,
+        productId: request.product_id,
+      });
+      toast.success("Đã gửi phản hồi và ghi vào audit trail");
+      setValues({});
+    } catch (e) {
+      toast.error(
+        e instanceof Error
+          ? `${e.message} — cần đăng nhập tài khoản Supplier`
+          : "Không thể gửi phản hồi",
+      );
+    }
+  }
+  return (
+    <AppShell>
+      <PageHeader
+        title={`Xin chào, ${supplierName}`}
+        description="Không gian làm việc dành cho nhà cung cấp: quản lý yêu cầu, bằng chứng và quyền chia sẻ dữ liệu với đối tác SME."
+        action={
+          <Badge className="h-9 bg-emerald-soft px-3 text-emerald hover:bg-emerald-soft">
+            <LockKeyhole className="mr-1.5 size-4" />
+            Supplier-secured workspace
+          </Badge>
+        }
+      />
+      <div className="grid gap-4 md:grid-cols-4">
+        {[
+          ["Yêu cầu đang chờ", pending.length, Clock3, "text-amber"],
+          [
+            "Dữ liệu đã chia sẻ",
+            records.filter((r) => !supplier || r.supplier_id === supplier.id).length,
+            Database,
+            "text-primary",
+          ],
+          [
+            "Bằng chứng",
+            documents.filter((d) => !supplier || d.supplier_id === supplier.id).length,
+            FileCheck2,
+            "text-emerald",
+          ],
+          ["Đối tác đang kết nối", 1, Users, "text-info"],
+        ].map(([l, v, Ic, t]) => {
+          const I = Ic as typeof Clock3;
+          return (
+            <div key={String(l)} className="surface-card p-5">
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-muted-foreground">{String(l)}</p>
+                <I className={`size-5 ${t}`} />
+              </div>
+              <p className="mt-3 text-3xl font-bold">{Number(v)}</p>
+            </div>
+          );
+        })}
+      </div>
+      <div className="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
+        <div className="surface-card p-5">
+          <div className="mb-4 flex items-center justify-between">
+            <div>
+              <h2 className="text-lg font-semibold">Vị trí trong chuỗi TRACEPASS</h2>
+              <p className="text-sm text-muted-foreground">
+                Dữ liệu của bạn chỉ đi qua những kết nối được cấp quyền
+              </p>
+            </div>
+            <Badge variant="outline">
+              <span className="mr-2 size-2 rounded-full bg-emerald tp-live-dot" />
+              Đang đồng bộ
+            </Badge>
+          </div>
+          <SupplyNetwork compact />
+        </div>
+        <div className="surface-card p-5">
+          <div className="flex items-center gap-2">
+            <BarChart3 className="size-5 text-primary" />
+            <h2 className="font-semibold">Data health</h2>
+          </div>
+          <div className="mt-5 space-y-4">
+            {[
+              ["Độ đầy đủ", 86, "bg-emerald"],
+              ["Bằng chứng hợp lệ", 72, "bg-primary"],
+              ["Phản hồi đúng hạn", 94, "bg-info"],
+              ["Dữ liệu tái sử dụng", 63, "bg-amber"],
+            ].map(([l, v, c]) => (
+              <div key={String(l)}>
+                <div className="mb-1.5 flex justify-between text-sm">
+                  <span>{String(l)}</span>
+                  <strong>{Number(v)}%</strong>
+                </div>
+                <div className="h-2 rounded-full bg-muted">
+                  <div className={`h-full rounded-full ${c}`} style={{ width: `${v}%` }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      <Tabs defaultValue="requests" className="mt-6">
+        <TabsList>
+          <TabsTrigger value="requests">Yêu cầu cần xử lý ({pending.length})</TabsTrigger>
+          <TabsTrigger value="records">Dữ liệu đã chia sẻ</TabsTrigger>
+          <TabsTrigger value="partners">Đối tác & quyền truy cập</TabsTrigger>
+        </TabsList>
+        <TabsContent value="requests" className="mt-4">
+          <div className="grid gap-6 lg:grid-cols-[320px_minmax(0,1fr)]">
+            <aside className="surface-card h-fit p-4">
+              <Label>Đang xem với tư cách</Label>
+              <Select
+                value={supplierId}
+                onValueChange={(v) => {
+                  setSupplierId(v);
+                  setRequestId("");
+                }}
+              >
+                <SelectTrigger className="mt-2">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {suppliers.map((s) => (
+                    <SelectItem key={s.id} value={s.id}>
+                      {s.tracepass_organizations?.name ?? s.supplier_code}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <div className="mt-5 space-y-2">
+                {pending.map((r) => (
+                  <button
+                    key={r.id}
+                    onClick={() => setRequestId(r.id)}
+                    className={`w-full rounded-xl border p-3 text-left ${request?.id === r.id ? "border-primary bg-primary/5" : "hover:bg-muted/50"}`}
+                  >
+                    <p className="text-sm font-semibold">{r.title}</p>
+                    <p className="mt-1 text-xs text-muted-foreground">Hạn {r.due_date ?? "—"}</p>
+                  </button>
+                ))}
+                {!pending.length ? (
+                  <p className="rounded-lg bg-muted p-4 text-center text-sm text-muted-foreground">
+                    <CheckCircle2 className="mx-auto mb-2 size-6 text-emerald" />
+                    Đã xử lý hết yêu cầu
+                  </p>
+                ) : null}
+              </div>
+            </aside>
+            <section className="surface-card overflow-hidden">
+              {request ? (
+                <>
+                  <div className="border-b p-5">
+                    <div className="flex justify-between gap-3">
+                      <div>
+                        <h2 className="text-xl font-bold">{request.title}</h2>
+                        <p className="mt-1 text-sm text-muted-foreground">
+                          Từ Vision Textile JSC · hạn {request.due_date ?? "—"}
+                        </p>
+                      </div>
+                      <Badge variant="outline" className="border-amber/30 bg-amber/10 text-amber">
+                        Đang chờ
+                      </Badge>
+                    </div>
+                    <div className="mt-4 flex gap-3 rounded-xl border border-primary/20 bg-primary/5 p-3">
+                      <Sparkles className="size-5 shrink-0 text-primary" />
+                      <p className="text-sm">
+                        <strong>AI gợi ý từ lịch sử:</strong> kiểm tra lại trước khi gửi. TRACEPASS
+                        không tự xác nhận thay bạn.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="grid gap-5 p-5">
+                    {(request.requested_fields ?? []).map((f) => (
+                      <div key={f.key} className="grid gap-2">
+                        <Label>
+                          {f.label}
+                          {f.required ? <span className="text-destructive"> *</span> : null}
+                        </Label>
+                        <Input
+                          value={values[f.key] ?? suggested[f.key] ?? ""}
+                          onChange={(e) => setValues((x) => ({ ...x, [f.key]: e.target.value }))}
+                        />
+                        <p className="text-xs text-muted-foreground">
+                          Nguồn gợi ý: bản ghi đã xác nhận gần nhất
+                        </p>
+                      </div>
+                    ))}
+                    <div className="grid gap-2">
+                      <Label>Bằng chứng</Label>
+                      <div className="flex gap-2">
+                        <Input value={evidence} onChange={(e) => setEvidence(e.target.value)} />
+                        <Button variant="outline">
+                          <FileUp className="size-4" />
+                          Chọn tệp
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="grid gap-2">
+                      <Label>Phạm vi cho phép tái sử dụng</Label>
+                      <Select value={permission} onValueChange={setPermission}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="request_only">Chỉ yêu cầu này</SelectItem>
+                          <SelectItem value="same_material_12_months">
+                            Cùng nguyên liệu trong 12 tháng
+                          </SelectItem>
+                          <SelectItem value="same_supplier_until_change">
+                            Các lô đến khi có thay đổi
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  <div className="flex justify-end border-t bg-muted/30 p-4">
+                    <Button onClick={send} disabled={submit.isPending}>
+                      <Send className="size-4" />
+                      {submit.isPending ? "Đang gửi..." : "Ký xác nhận & gửi dữ liệu"}
+                    </Button>
+                  </div>
+                </>
+              ) : (
+                <div className="p-14 text-center text-muted-foreground">
+                  Chọn một yêu cầu để xử lý.
+                </div>
+              )}
+            </section>
+          </div>
+        </TabsContent>
+        <TabsContent value="records" className="mt-4">
+          <div className="surface-card overflow-hidden">
+            <table className="w-full text-sm">
+              <thead className="bg-muted/60 text-left">
+                <tr>
+                  <th className="p-4">Dữ liệu</th>
+                  <th className="p-4">Giá trị</th>
+                  <th className="p-4">Nguồn</th>
+                  <th className="p-4">Quyền chia sẻ</th>
+                  <th className="p-4">Phiên bản</th>
+                </tr>
+              </thead>
+              <tbody>
+                {records
+                  .filter((r) => !supplier || r.supplier_id === supplier.id)
+                  .map((r) => (
+                    <tr key={r.id} className="border-t">
+                      <td className="p-4 font-semibold">{r.data_key}</td>
+                      <td className="p-4">{r.data_value}</td>
+                      <td className="p-4 text-muted-foreground">{r.source}</td>
+                      <td className="p-4">
+                        <Badge variant="outline">{r.reuse_scope}</Badge>
+                      </td>
+                      <td className="p-4">v{r.version}</td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
+        </TabsContent>
+        <TabsContent value="partners" className="mt-4">
+          <div className="surface-card p-6">
+            <div className="flex items-start justify-between">
+              <div className="flex gap-3">
+                <span className="flex size-11 items-center justify-center rounded-xl bg-primary-soft text-primary">
+                  <Users className="size-5" />
+                </span>
+                <div>
+                  <h2 className="font-bold">Vision Textile JSC</h2>
+                  <p className="text-sm text-muted-foreground">
+                    SME · Việt Nam · Kết nối đang hoạt động
+                  </p>
+                </div>
+              </div>
+              <Badge className="bg-emerald-soft text-emerald hover:bg-emerald-soft">
+                Đã xác minh
+              </Badge>
+            </div>
+            <div className="mt-5 grid gap-3 sm:grid-cols-3">
+              {[
+                ["Được yêu cầu dữ liệu", "Có"],
+                ["Tự động tái sử dụng", "Theo từng phạm vi"],
+                ["Quyền phát hành DPP", "Không — SME xác nhận"],
+              ].map(([k, v]) => (
+                <div key={k} className="rounded-xl border p-4">
+                  <p className="text-xs text-muted-foreground">{k}</p>
+                  <p className="mt-1 text-sm font-semibold">{v}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </TabsContent>
+      </Tabs>
+    </AppShell>
+  );
 }

@@ -10,9 +10,11 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
+import { Toaster } from "@/components/ui/sonner";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { RoleProvider } from "@/lib/tracepass/role";
 import { AuthProvider } from "@/lib/tracepass/auth";
+import { AuthGuard } from "@/components/tracepass/AuthGuard";
 
 function NotFoundComponent() {
   return (
@@ -104,11 +106,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>
-      <body>
+      <body suppressHydrationWarning>
         {children}
         <Scripts />
       </body>
@@ -121,7 +123,14 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider><RoleProvider><Outlet /></RoleProvider></AuthProvider>
+      <AuthProvider>
+        <RoleProvider>
+          <AuthGuard>
+            <Outlet />
+          </AuthGuard>
+          <Toaster richColors position="top-right" />
+        </RoleProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

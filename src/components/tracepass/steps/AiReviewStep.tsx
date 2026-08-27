@@ -29,7 +29,13 @@ const fields: Field[] = [
     source: "Trang 2",
     confidence: "Trung bình",
   },
-  { id: "weight", label: "Định lượng vải", value: "180 g/m²", source: "Trang 2", confidence: "Cao" },
+  {
+    id: "weight",
+    label: "Định lượng vải",
+    value: "180 g/m²",
+    source: "Trang 2",
+    confidence: "Cao",
+  },
 ];
 
 export function AiReviewStep({ onNext }: { onNext: () => void }) {

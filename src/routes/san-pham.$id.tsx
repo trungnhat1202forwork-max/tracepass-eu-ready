@@ -47,7 +47,8 @@ function ProductDetail() {
   if (aiProcessed) completed.push("ho-so", "xac-nhan");
   if (issuesResolved) completed.push("danh-gia");
 
-  const go = (key: StepKey) => navigate({ to: "/san-pham/$id", params: { id }, search: { buoc: key } });
+  const go = (key: StepKey) =>
+    navigate({ to: "/san-pham/$id", params: { id }, search: { buoc: key } });
 
   return (
     <AppShell>

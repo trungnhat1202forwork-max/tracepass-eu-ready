@@ -161,7 +161,10 @@ export const useOrgs = () =>
   useQuery({ queryKey: k("orgs"), queryFn: () => select<Org>("tracepass_organizations", "*") });
 
 export const useProducts = () =>
-  useQuery({ queryKey: k("products"), queryFn: () => select<DbProduct>("tracepass_products", "*") });
+  useQuery({
+    queryKey: k("products"),
+    queryFn: () => select<DbProduct>("tracepass_products", "*"),
+  });
 
 export const useSuppliers = () =>
   useQuery({
@@ -194,15 +197,13 @@ export const useDocuments = () =>
 export const useSupplierRequests = () =>
   useQuery({
     queryKey: k("supplier-requests"),
-    queryFn: () =>
-      select<DbSupplierRequest>("tracepass_supplier_requests", "*", "created_at"),
+    queryFn: () => select<DbSupplierRequest>("tracepass_supplier_requests", "*", "created_at"),
   });
 
 export const useSupplierResponses = () =>
   useQuery({
     queryKey: k("supplier-responses"),
-    queryFn: () =>
-      select<DbSupplierResponse>("tracepass_supplier_responses", "*", "created_at"),
+    queryFn: () => select<DbSupplierResponse>("tracepass_supplier_responses", "*", "created_at"),
   });
 
 export const useDataRecords = () =>
@@ -430,7 +431,13 @@ export type AiComplianceResult = {
   mode: string;
   coverage: number;
   confidence: number;
-  matches: Array<{ code: string; title: string; source: string; similarity: number; relevant: boolean }>;
+  matches: Array<{
+    code: string;
+    title: string;
+    source: string;
+    similarity: number;
+    relevant: boolean;
+  }>;
   gaps: Array<{ code: string; title: string; reason: string }>;
   humanReviewRequired: boolean;
   analyzedAt: string;

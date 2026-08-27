@@ -61,7 +61,11 @@ function NewProduct() {
         className="surface-card max-w-4xl p-7"
         onSubmit={(e) => {
           e.preventDefault();
-          navigate({ to: "/san-pham/$id", params: { id: "ts-cot-001" }, search: { buoc: "ho-so" } });
+          navigate({
+            to: "/san-pham/$id",
+            params: { id: "ts-cot-001" },
+            search: { buoc: "ho-so" },
+          });
         }}
       >
         <div className="grid gap-6 sm:grid-cols-2">
