@@ -1,6 +1,6 @@
 {
-  "name": "TracePass EU Ready",
-  "description": "EU Digital Product Passport (DPP) compliance and supply chain traceability platform for textile and apparel exporters",
+  "name": "TRACEPASS EU Ready",
+  "description": "Hệ thống quản lý dữ liệu DPP (Digital Product Passport) và tuân thủ tiêu chuẩn ESPR/REACH cho ngành dệt may xuất khẩu EU.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

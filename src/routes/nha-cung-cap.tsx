@@ -71,11 +71,11 @@ function SupplierNetwork() {
   const [supplierId, setSupplierId] = useState("");
   const [title, setTitle] = useState("Bổ sung dữ liệu truy xuất nguồn gốc");
 
-  const suppliers = useMemo(() => suppliersQ.data ?? [], [suppliersQ.data]);
-  const requests = useMemo(() => requestsQ.data ?? [], [requestsQ.data]);
-  const products = useMemo(() => productsQ.data ?? [], [productsQ.data]);
-  const records = useMemo(() => recordsQ.data ?? [], [recordsQ.data]);
-  const versions = useMemo(() => versionsQ.data ?? [], [versionsQ.data]);
+  const suppliers = suppliersQ.data ?? [];
+  const requests = requestsQ.data ?? [];
+  const products = productsQ.data ?? [];
+  const records = recordsQ.data ?? [];
+  const versions = versionsQ.data ?? [];
   const mainProduct = products.find((p) => p.sku === "TS-COT-001") ?? products[0];
 
   const supplierNames = useMemo(

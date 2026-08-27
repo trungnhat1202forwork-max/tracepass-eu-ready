@@ -49,14 +49,12 @@ const suggested: Record<string, string> = {
 };
 
 function SupplierWorkspace() {
-  const suppliersQ = useSuppliers();
-  const requestsQ = useSupplierRequests();
-  const recordsQ = useDataRecords();
-  const documentsQ = useDocuments();
-  const suppliers = useMemo(() => suppliersQ.data ?? [], [suppliersQ.data]);
-  const requests = useMemo(() => requestsQ.data ?? [], [requestsQ.data]);
-  const records = useMemo(() => recordsQ.data ?? [], [recordsQ.data]);
-  const documents = useMemo(() => documentsQ.data ?? [], [documentsQ.data]);
+  const { setRole } = useWorkspaceRole();
+  useEffect(() => setRole("supplier"), [setRole]);
+  const suppliers = useSuppliers().data ?? [];
+  const requests = useSupplierRequests().data ?? [];
+  const records = useDataRecords().data ?? [];
+  const documents = useDocuments().data ?? [];
   const submit = useSubmitSupplierResponse();
   const [supplierId, setSupplierId] = useState("");
   const pending = useMemo(
