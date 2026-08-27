@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as CaiDatRouteImport } from './routes/cai-dat'
 import { Route as HoSoRouteImport } from './routes/ho-so'
 import { Route as MucDoSanSangRouteImport } from './routes/muc-do-san-sang'
@@ -29,6 +30,11 @@ import { Route as DppCongKhaiIdRouteImport } from './routes/dpp.cong-khai.$id'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CaiDatRoute = CaiDatRouteImport.update({
@@ -109,6 +115,7 @@ const DppCongKhaiIdRoute = DppCongKhaiIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/cai-dat': typeof CaiDatRoute
   '/ho-so': typeof HoSoRoute
   '/muc-do-san-sang': typeof MucDoSanSangRoute
@@ -127,6 +134,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/cai-dat': typeof CaiDatRoute
   '/ho-so': typeof HoSoRoute
   '/muc-do-san-sang': typeof MucDoSanSangRoute
@@ -146,6 +154,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/cai-dat': typeof CaiDatRoute
   '/ho-so': typeof HoSoRoute
   '/muc-do-san-sang': typeof MucDoSanSangRoute
@@ -166,6 +175,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/cai-dat'
     | '/ho-so'
     | '/muc-do-san-sang'
@@ -184,6 +194,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/admin'
     | '/cai-dat'
     | '/ho-so'
     | '/muc-do-san-sang'
@@ -202,6 +213,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/admin'
     | '/cai-dat'
     | '/ho-so'
     | '/muc-do-san-sang'
@@ -221,6 +233,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRoute
   CaiDatRoute: typeof CaiDatRoute
   HoSoRoute: typeof HoSoRoute
   MucDoSanSangRoute: typeof MucDoSanSangRoute
@@ -245,6 +258,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cai-dat': {
@@ -357,6 +377,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRoute,
   CaiDatRoute: CaiDatRoute,
   HoSoRoute: HoSoRoute,
   MucDoSanSangRoute: MucDoSanSangRoute,
